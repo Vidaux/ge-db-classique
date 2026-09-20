@@ -1,0 +1,18 @@
+{
+    "schema": 4,
+    "entries": [
+        {
+            "date": "2026-09-20",
+            "title": "Automated IPF extract diff",
+            "items": [
+                "Initialized the automated IPF extract snapshot. Future parses will compare new extracts against this baseline."
+            ],
+            "summary": {
+                "totalAdded": 0,
+                "totalChanged": 0,
+                "totalRemoved": 0
+            },
+            "details": []
+        }
+    ]
+}
