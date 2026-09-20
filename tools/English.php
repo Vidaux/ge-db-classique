@@ -48,6 +48,7 @@ function ReadJsonFile($path, $defaultValue) {
 }
 
 function WriteJsonFile($path, $data) {
+	EnsureDirectory(dirname($path));
 	file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
 }
 
@@ -1597,6 +1598,35 @@ function ApplyCommonNameFallbacks(&$table) {
 	}
 }
 
+function IsInvalidCharacterDisplayName($value) {
+	$value = trim((string)$value);
+	if ($value === '' || $value === 'None' || IsUnresolvedDictionaryRef($value)) {
+		return true;
+	}
+	return preg_match('/^(?:Required level\s*:|Recipe\s*-|Faction Skill Point\s*:|%s\b|\[[^\]]+\]\s*Stance level\s*:)/i', $value) === 1;
+}
+
+function ApplyCharacterNameFallbacks() {
+	global $Characters;
+
+	if (empty($Characters['ClassID']) || !is_array($Characters['ClassID'])) {
+		return;
+	}
+
+	foreach ($Characters['ClassID'] as $id) {
+		if (!IsInvalidCharacterDisplayName($Characters['Name'][$id] ?? '')) {
+			continue;
+		}
+		foreach (array('EngName', 'ClassName') as $fallbackField) {
+			$fallback = trim((string)($Characters[$fallbackField][$id] ?? ''));
+			if ($fallback !== '' && $fallback !== 'None' && !IsInvalidCharacterDisplayName($fallback)) {
+				$Characters['Name'][$id] = $fallback;
+				break;
+			}
+		}
+	}
+}
+
 function SaXtAGe($relativeFiles, $arrayName, $excludeAttrib = "") {
 	$paths = array();
 	foreach (explode(' ', $relativeFiles) as $relativeFile) {
@@ -1663,6 +1693,63 @@ function ImageTag($folder, $fileName, $alt = '', $attrs = '') {
 
 function Html($value) {
 	return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+function CharacterAvailabilityJsonPath() {
+	return WebOutputPath('assets/data/character-availability.json');
+}
+
+function WriteCharacterAvailabilityJson() {
+	global $Characters;
+
+	$characters = array();
+	$defaultActiveClassIds = array(1, 2, 3, 4, 5);
+	if (isset($Characters['ClassID']) && is_array($Characters['ClassID'])) {
+		foreach ($Characters['ClassID'] as $id) {
+			$classId = (int)$id;
+			$characters[] = array(
+				'classId' => $classId,
+				'className' => (string)($Characters['ClassName'][$id] ?? ''),
+				'name' => (string)($Characters['Name'][$id] ?? ''),
+				'active' => in_array($classId, $defaultActiveClassIds, true),
+			);
+		}
+	}
+
+	usort($characters, function($a, $b) {
+		return $a['classId'] <=> $b['classId'];
+	});
+
+	WriteJsonFile(CharacterAvailabilityJsonPath(), array(
+		'defaultActive' => false,
+		'characters' => $characters,
+	));
+}
+
+function ValidStanceId($stanceId) {
+	global $Stances;
+
+	$stanceId = trim((string)$stanceId);
+	return $stanceId !== '' && $stanceId !== '0' && isset($Stances['ClassID'][$stanceId]);
+}
+
+function AddCharacterStance($stanceId, &$stanIDs, &$megastances, &$searchParts) {
+	global $Stances;
+
+	if (!ValidStanceId($stanceId)) {
+		return '';
+	}
+
+	$classId = (string)$Stances['ClassID'][$stanceId];
+	AddCharacterSearchPart($searchParts, $Stances['Name'][$stanceId]);
+	if (!in_array($classId, $stanIDs, true)) {
+		$stanIDs[] = $classId;
+	}
+	if (!in_array($classId, $megastances, true)) {
+		$megastances[] = $classId;
+	}
+
+	return '['.$Stances['Name'][$stanceId].']';
 }
 
 function ItemRichText($value) {
@@ -2789,6 +2876,8 @@ SaXtA(trim($megaitems), 'Items', 'Dummy_A_LH Dummy_A_RH Dummy_B Dummy_F Dummy_N_
 ResolveDictionaryRefsInArray($Items);
 ApplyCommonNameFallbacks($Items);
 SaXtAGe("xml/datatable_job.xml", 'Characters');
+ApplyCharacterNameFallbacks();
+WriteCharacterAvailabilityJson();
 SaXtAGe("xml/datatable_stance.xml", 'Stances');
 SaXtAGe("xml/datatable_stancecondition.xml", 'StanceConds');
 SaXtAGe("xml/datatable_skill.xml", 'Skill');
@@ -2925,65 +3014,22 @@ $CharacterMainStat = CharacterMainStat($CharacterStats);
 	$CharacterWeaponSearchParts=array();
 	$CharacterStanceSearchParts=array();
 	foreach(explode(',',$Characters['EqpWeaponSet'][$id]) as $SCond){
-		AddCharacterSearchPart($CharacterWeaponSearchParts, $StanceConds['RHand'][$SCond]);
-		AddCharacterSearchPart($CharacterWeaponSearchParts, $StanceConds['LHand'][$SCond]);
-		AddCharacterSearchPart($CharacterStanceSearchParts, $Stances['Name'][$StanceConds['Stance1'][$SCond]]);
-		echo 'dtrow(`'.$StanceConds['RHand'][$SCond].'`,`'.$StanceConds['LHand'][$SCond].'`,`['.$Stances['Name'][$StanceConds['Stance1'][$SCond]].']';
-		if(!in_array($Stances['ClassID'][$StanceConds['Stance1'][$SCond]],$StanIDs))
-		{array_push($StanIDs,$Stances['ClassID'][$StanceConds['Stance1'][$SCond]]);
-			if(!in_array($Stances['ClassID'][$StanceConds['Stance1'][$SCond]],$megastances))
-			{array_push($megastances,$Stances['ClassID'][$StanceConds['Stance1'][$SCond]]);};
-		};
-		if($StanceConds['Stance2'][$SCond]!="0")
-		{
-			AddCharacterSearchPart($CharacterStanceSearchParts, $Stances['Name'][$StanceConds['Stance2'][$SCond]]);
-			echo '['.$Stances['Name'][$StanceConds['Stance2'][$SCond]].']';
-				if(!in_array($Stances['ClassID'][$StanceConds['Stance2'][$SCond]],$StanIDs))
-				{array_push($StanIDs,$Stances['ClassID'][$StanceConds['Stance2'][$SCond]]);	
-					if(!in_array($Stances['ClassID'][$StanceConds['Stance2'][$SCond]],$megastances))
-					{array_push($megastances,$Stances['ClassID'][$StanceConds['Stance2'][$SCond]]);};
-				};
-		}; 
-		if($StanceConds['Stance3'][$SCond]!="0")
-			{AddCharacterSearchPart($CharacterStanceSearchParts, $Stances['Name'][$StanceConds['Stance3'][$SCond]]);
-			echo '['.$Stances['Name'][$StanceConds['Stance3'][$SCond]].']';
-			if(!in_array($Stances['ClassID'][$StanceConds['Stance3'][$SCond]],$StanIDs))
-				{array_push($StanIDs,$Stances['ClassID'][$StanceConds['Stance3'][$SCond]]);
-				if(!in_array($Stances['ClassID'][$StanceConds['Stance3'][$SCond]],$megastances))
-				{array_push($megastances,$Stances['ClassID'][$StanceConds['Stance3'][$SCond]]);};
-				};
-			};
-		
-		if($StanceConds['Stance4'][$SCond]!="0")
-			{AddCharacterSearchPart($CharacterStanceSearchParts, $Stances['Name'][$StanceConds['Stance4'][$SCond]]);
-			echo '['.$Stances['Name'][$StanceConds['Stance4'][$SCond]].']';
-			if(!in_array($Stances['ClassID'][$StanceConds['Stance4'][$SCond]],$StanIDs))
-				{array_push($StanIDs,$Stances['ClassID'][$StanceConds['Stance4'][$SCond]]);
-					if(!in_array($Stances['ClassID'][$StanceConds['Stance4'][$SCond]],$megastances))
-					{array_push($megastances,$Stances['ClassID'][$StanceConds['Stance4'][$SCond]]);};
-				};
-			};
-		if($StanceConds['Stance5'][$SCond]!="0"){AddCharacterSearchPart($CharacterStanceSearchParts, $Stances['Name'][$StanceConds['Stance5'][$SCond]]);
-			echo '['.$Stances['Name'][$StanceConds['Stance5'][$SCond]].']';
-			if(!in_array($Stances['ClassID'][$StanceConds['Stance5'][$SCond]],$StanIDs))
-			{array_push($StanIDs,$Stances['ClassID'][$StanceConds['Stance5'][$SCond]]);
-			if(!in_array($Stances['ClassID'][$StanceConds['Stance5'][$SCond]],$megastances))
-				{array_push($megastances,$Stances['ClassID'][$StanceConds['Stance5'][$SCond]]);};
-			};
-		};
-		if($StanceConds['Stance6'][$SCond]!="0"){
-			AddCharacterSearchPart($CharacterStanceSearchParts, $Stances['Name'][$StanceConds['Stance6'][$SCond]]);
-			echo '['.$Stances['Name'][$StanceConds['Stance6'][$SCond]].']';
-			if(!in_array($Stances['ClassID'][$StanceConds['Stance6'][$SCond]],$StanIDs))
-		{array_push($StanIDs,$Stances['ClassID'][$StanceConds['Stance6'][$SCond]]);
-		if(!in_array($Stances['ClassID'][$StanceConds['Stance6'][$SCond]],$StanIDs))
-				{array_push($megastances,$Stances['ClassID'][$StanceConds['Stance6'][$SCond]]);};};
-											};
-		echo '`)+';
+		$RightHand = $StanceConds['RHand'][$SCond] ?? '';
+		$LeftHand = $StanceConds['LHand'][$SCond] ?? '';
+		AddCharacterSearchPart($CharacterWeaponSearchParts, $RightHand);
+		AddCharacterSearchPart($CharacterWeaponSearchParts, $LeftHand);
+		$StanceNames = '';
+		for ($stanceNumber = 1; $stanceNumber <= 6; $stanceNumber++) {
+			$stanceKey = 'Stance'.$stanceNumber;
+			$StanceNames .= AddCharacterStance($StanceConds[$stanceKey][$SCond] ?? '', $StanIDs, $megastances, $CharacterStanceSearchParts);
+		}
+		echo 'dtrow(`'.$RightHand.'`,`'.$LeftHand.'`,`'.$StanceNames.'`)+';
 	};
 	echo '`</table>`,';
 foreach ($StanIDs as $IDS){
-echo 'WriteStance'.$IDS.'()'.'+';
+	if (ValidStanceId($IDS)) {
+		echo 'WriteStance'.$IDS.'()+';
+	}
 }
 	echo "'');";
 	$CharacterAction = RichColorMarkupToHtml(ob_get_clean());
@@ -3011,6 +3057,9 @@ $megastances=array_unique($megastances);
 
 
 foreach ($megastances as $curstance){
+if(!ValidStanceId($curstance)){
+	continue;
+}
 echo 'function WriteStance'.$curstance.'(){DrawStanceHeader(`'.$Stances['Name'][$curstance].'`,`'
 	.($Stances['StnATK'][$curstance]*100-100).'%`,`'
 	.$Stances['StnHR'][$curstance].'(+'.($Stances['IncHR'][$curstance]*25).') on stance lv.25.`,`'

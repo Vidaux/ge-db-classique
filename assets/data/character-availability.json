@@ -1,0 +1,1901 @@
+{
+    "defaultActive": false,
+    "characters": [
+        {
+            "classId": 1,
+            "className": "Fighter",
+            "name": "Fighter",
+            "active": true
+        },
+        {
+            "classId": 2,
+            "className": "Wizard",
+            "name": "Wizard",
+            "active": true
+        },
+        {
+            "classId": 3,
+            "className": "Scout",
+            "name": "Scout",
+            "active": true
+        },
+        {
+            "classId": 4,
+            "className": "Musketeer",
+            "name": "Musketeer",
+            "active": true
+        },
+        {
+            "classId": 5,
+            "className": "Warlock",
+            "name": "Warlock",
+            "active": true
+        },
+        {
+            "classId": 6,
+            "className": "Grace",
+            "name": "Bernelli",
+            "active": true
+        },
+        {
+            "classId": 7,
+            "className": "Idge",
+            "name": "Idge Imbrulia",
+            "active": true
+        },
+        {
+            "classId": 8,
+            "className": "Claude",
+            "name": "Claude",
+            "active": true
+        },
+        {
+            "classId": 9,
+            "className": "Brunie",
+            "name": "Brunie",
+            "active": true
+        },
+        {
+            "classId": 10,
+            "className": "Soldier",
+            "name": "Soldier of Reboldoeux",
+            "active": true
+        },
+        {
+            "classId": 11,
+            "className": "Ramiro",
+            "name": "Ramiro",
+            "active": true
+        },
+        {
+            "classId": 12,
+            "className": "Tiburon",
+            "name": "Tiburon",
+            "active": true
+        },
+        {
+            "classId": 13,
+            "className": "Jack",
+            "name": "Jack",
+            "active": true
+        },
+        {
+            "classId": 14,
+            "className": "Yeganeh",
+            "name": "Diego",
+            "active": true
+        },
+        {
+            "classId": 15,
+            "className": "Selden",
+            "name": "Worker",
+            "active": false
+        },
+        {
+            "classId": 16,
+            "className": "Andre",
+            "name": "Andre",
+            "active": true
+        },
+        {
+            "classId": 17,
+            "className": "Panfilo",
+            "name": "Panfilo de Narvaez",
+            "active": true
+        },
+        {
+            "classId": 18,
+            "className": "Jose",
+            "name": "Jose Corthasar",
+            "active": true
+        },
+        {
+            "classId": 19,
+            "className": "Adelina",
+            "name": "Adelina Esperanza",
+            "active": true
+        },
+        {
+            "classId": 20,
+            "className": "MBoma",
+            "name": "MBoma",
+            "active": true
+        },
+        {
+            "classId": 21,
+            "className": "Soho",
+            "name": "Soho",
+            "active": true
+        },
+        {
+            "classId": 22,
+            "className": "Alejandro",
+            "name": "Alejandro",
+            "active": true
+        },
+        {
+            "classId": 23,
+            "className": "Lisa",
+            "name": "Lisa Lynway",
+            "active": true
+        },
+        {
+            "classId": 24,
+            "className": "Emilia",
+            "name": "Emilia Guliano",
+            "active": true
+        },
+        {
+            "classId": 25,
+            "className": "Sharif",
+            "name": "Najib Sharif",
+            "active": true
+        },
+        {
+            "classId": 26,
+            "className": "Lorch",
+            "name": "Lorch",
+            "active": true
+        },
+        {
+            "classId": 27,
+            "className": "Gurtrude",
+            "name": "Grutrude",
+            "active": true
+        },
+        {
+            "classId": 28,
+            "className": "RescueKnight",
+            "name": "Rescue Knight",
+            "active": true
+        },
+        {
+            "classId": 29,
+            "className": "Karjalainen",
+            "name": "Karjalainen",
+            "active": true
+        },
+        {
+            "classId": 30,
+            "className": "Gracielo",
+            "name": "Gracielo",
+            "active": true
+        },
+        {
+            "classId": 31,
+            "className": "Trooper",
+            "name": "Coimbra Trooper",
+            "active": true
+        },
+        {
+            "classId": 32,
+            "className": "Grandma",
+            "name": "Grandma",
+            "active": true
+        },
+        {
+            "classId": 33,
+            "className": "Romina",
+            "name": "Romina",
+            "active": true
+        },
+        {
+            "classId": 34,
+            "className": "CatherineSTR",
+            "name": "Catherine (STR)",
+            "active": true
+        },
+        {
+            "classId": 35,
+            "className": "CatherineDEX",
+            "name": "Catherine (DEX)",
+            "active": true
+        },
+        {
+            "classId": 36,
+            "className": "CatherineINT",
+            "name": "Catherine (INT)",
+            "active": true
+        },
+        {
+            "classId": 37,
+            "className": "CatherineREAL",
+            "name": "Catherine",
+            "active": true
+        },
+        {
+            "classId": 38,
+            "className": "PanfiloBattle",
+            "name": "Battle Cook Panfilo",
+            "active": true
+        },
+        {
+            "classId": 39,
+            "className": "AdelinaPirate",
+            "name": "Pirate Adelina",
+            "active": true
+        },
+        {
+            "classId": 40,
+            "className": "SohoFighter",
+            "name": "Soho The Wind",
+            "active": true
+        },
+        {
+            "classId": 41,
+            "className": "EmiliaSage",
+            "name": "Sage Emilia",
+            "active": true
+        },
+        {
+            "classId": 42,
+            "className": "IdgeBattle",
+            "name": "Battle Smith Idge",
+            "active": true
+        },
+        {
+            "classId": 43,
+            "className": "Selva",
+            "name": "Selva",
+            "active": true
+        },
+        {
+            "classId": 44,
+            "className": "RescueKnightSnow",
+            "name": "Rescue Knight stationed in Ice district",
+            "active": false
+        },
+        {
+            "classId": 45,
+            "className": "Infantry",
+            "name": "City of Auch Infantry",
+            "active": true
+        },
+        {
+            "classId": 46,
+            "className": "CatherineTEST",
+            "name": "Catherine (Test)",
+            "active": false
+        },
+        {
+            "classId": 47,
+            "className": "Viki",
+            "name": "Viki",
+            "active": true
+        },
+        {
+            "classId": 48,
+            "className": "Muathai",
+            "name": "Irawan",
+            "active": true
+        },
+        {
+            "classId": 49,
+            "className": "Angie",
+            "name": "Angie",
+            "active": true
+        },
+        {
+            "classId": 50,
+            "className": "Rada",
+            "name": "Lada",
+            "active": false
+        },
+        {
+            "classId": 51,
+            "className": "Dietrich",
+            "name": "Kurt",
+            "active": true
+        },
+        {
+            "classId": 52,
+            "className": "Eduardo",
+            "name": "Edward",
+            "active": true
+        },
+        {
+            "classId": 53,
+            "className": "Garcia",
+            "name": "Garcia",
+            "active": true
+        },
+        {
+            "classId": 54,
+            "className": "Soso",
+            "name": "Feng Ling",
+            "active": true
+        },
+        {
+            "classId": 55,
+            "className": "Rio",
+            "name": "Rio",
+            "active": true
+        },
+        {
+            "classId": 56,
+            "className": "Backho",
+            "name": "White Tiger",
+            "active": true
+        },
+        {
+            "classId": 57,
+            "className": "Calyce",
+            "name": "Calypso",
+            "active": true
+        },
+        {
+            "classId": 58,
+            "className": "Clair",
+            "name": "Claire",
+            "active": true
+        },
+        {
+            "classId": 59,
+            "className": "Nar",
+            "name": "Nar",
+            "active": true
+        },
+        {
+            "classId": 60,
+            "className": "Ania",
+            "name": "Ania",
+            "active": true
+        },
+        {
+            "classId": 61,
+            "className": "Hellena",
+            "name": "Hellena",
+            "active": true
+        },
+        {
+            "classId": 62,
+            "className": "Mifuyu",
+            "name": "Mifuyu",
+            "active": true
+        },
+        {
+            "classId": 63,
+            "className": "EmiliaLunatic",
+            "name": "Reckless Emilia",
+            "active": true
+        },
+        {
+            "classId": 64,
+            "className": "Asoka",
+            "name": "Asoka",
+            "active": true
+        },
+        {
+            "classId": 65,
+            "className": "CatherineTorsche",
+            "name": "Catherine Torsche",
+            "active": true
+        },
+        {
+            "classId": 66,
+            "className": "Valleria",
+            "name": "Valeria",
+            "active": false
+        },
+        {
+            "classId": 67,
+            "className": "Raven",
+            "name": "Raven",
+            "active": false
+        },
+        {
+            "classId": 68,
+            "className": "Leonele",
+            "name": "Leonele",
+            "active": false
+        },
+        {
+            "classId": 69,
+            "className": "Berroniff",
+            "name": "Veronif",
+            "active": false
+        },
+        {
+            "classId": 70,
+            "className": "Natalie",
+            "name": "Natalie",
+            "active": false
+        },
+        {
+            "classId": 71,
+            "className": "Daria",
+            "name": "Daria",
+            "active": false
+        },
+        {
+            "classId": 72,
+            "className": "Grandies",
+            "name": "Grandies",
+            "active": false
+        },
+        {
+            "classId": 73,
+            "className": "Ralph",
+            "name": "Ralph",
+            "active": false
+        },
+        {
+            "classId": 74,
+            "className": "Ludin",
+            "name": "Ludin",
+            "active": false
+        },
+        {
+            "classId": 75,
+            "className": "Adriana",
+            "name": "Adriana",
+            "active": false
+        },
+        {
+            "classId": 76,
+            "className": "Cruz",
+            "name": "Cruise",
+            "active": false
+        },
+        {
+            "classId": 77,
+            "className": "Ion",
+            "name": "Ion",
+            "active": false
+        },
+        {
+            "classId": 78,
+            "className": "Vincent",
+            "name": "Vincent",
+            "active": false
+        },
+        {
+            "classId": 79,
+            "className": "Veatrice",
+            "name": "Beatrice",
+            "active": false
+        },
+        {
+            "classId": 80,
+            "className": "Racel",
+            "name": "Rascel",
+            "active": false
+        },
+        {
+            "classId": 81,
+            "className": "Heyran",
+            "name": "Heyran",
+            "active": false
+        },
+        {
+            "classId": 82,
+            "className": "Jd",
+            "name": "JD",
+            "active": false
+        },
+        {
+            "classId": 83,
+            "className": "Marchetti",
+            "name": "Marchetti",
+            "active": false
+        },
+        {
+            "classId": 84,
+            "className": "CadetAdriana",
+            "name": "Cadet Adriana",
+            "active": false
+        },
+        {
+            "classId": 85,
+            "className": "Elisa",
+            "name": "Cadet Elisa",
+            "active": false
+        },
+        {
+            "classId": 86,
+            "className": "ElisaOfficer",
+            "name": "Elisa",
+            "active": false
+        },
+        {
+            "classId": 87,
+            "className": "Mary",
+            "name": "Marie",
+            "active": false
+        },
+        {
+            "classId": 88,
+            "className": "Tora",
+            "name": "Tora",
+            "active": false
+        },
+        {
+            "classId": 89,
+            "className": "Kess",
+            "name": "Caisse",
+            "active": false
+        },
+        {
+            "classId": 90,
+            "className": "Kano",
+            "name": "Cano",
+            "active": false
+        },
+        {
+            "classId": 91,
+            "className": "Freeday",
+            "name": "Friede",
+            "active": false
+        },
+        {
+            "classId": 92,
+            "className": "Sharon",
+            "name": "Eva Sharon",
+            "active": false
+        },
+        {
+            "classId": 93,
+            "className": "Sherlin",
+            "name": "Cherlyn",
+            "active": false
+        },
+        {
+            "classId": 94,
+            "className": "Barrel",
+            "name": "Barrol",
+            "active": false
+        },
+        {
+            "classId": 95,
+            "className": "Olivia",
+            "name": "Olivia",
+            "active": false
+        },
+        {
+            "classId": 96,
+            "className": "Grandies2",
+            "name": "P.Queen Grandma",
+            "active": false
+        },
+        {
+            "classId": 97,
+            "className": "Sorang",
+            "name": "Sorang",
+            "active": false
+        },
+        {
+            "classId": 98,
+            "className": "GraceSniper",
+            "name": "Sniper Bernelli",
+            "active": false
+        },
+        {
+            "classId": 99,
+            "className": "Liung",
+            "name": "Liung",
+            "active": false
+        },
+        {
+            "classId": 100,
+            "className": "Vendetta",
+            "name": "Valeria Vendetta",
+            "active": false
+        },
+        {
+            "classId": 101,
+            "className": "Viking",
+            "name": "Lhote",
+            "active": false
+        },
+        {
+            "classId": 102,
+            "className": "SpyOlivia",
+            "name": "Spy Olivia",
+            "active": false
+        },
+        {
+            "classId": 103,
+            "className": "Veil",
+            "name": "Veil",
+            "active": false
+        },
+        {
+            "classId": 104,
+            "className": "Selane",
+            "name": "Selene",
+            "active": false
+        },
+        {
+            "classId": 105,
+            "className": "Spirit",
+            "name": "Rose, The Spirit",
+            "active": false
+        },
+        {
+            "classId": 110,
+            "className": "Rachel",
+            "name": "Rachel Sheffield",
+            "active": false
+        },
+        {
+            "classId": 111,
+            "className": "Rosa",
+            "name": "Rosa",
+            "active": false
+        },
+        {
+            "classId": 112,
+            "className": "MontoroPC",
+            "name": "Montoro",
+            "active": false
+        },
+        {
+            "classId": 113,
+            "className": "ClaudeY",
+            "name": "Battlefield Claude",
+            "active": false
+        },
+        {
+            "classId": 114,
+            "className": "SierraLosPC",
+            "name": "Sierra Rose",
+            "active": false
+        },
+        {
+            "classId": 115,
+            "className": "Nena",
+            "name": "Nena",
+            "active": false
+        },
+        {
+            "classId": 116,
+            "className": "GracieloHD",
+            "name": "Gracielo of the Lightning",
+            "active": false
+        },
+        {
+            "classId": 117,
+            "className": "Illusion",
+            "name": "Illusion",
+            "active": false
+        },
+        {
+            "classId": 118,
+            "className": "SherlinICE",
+            "name": "Snowflake Cherlyn",
+            "active": false
+        },
+        {
+            "classId": 119,
+            "className": "Levin",
+            "name": "Levine",
+            "active": false
+        },
+        {
+            "classId": 120,
+            "className": "hknight",
+            "name": "Sirius",
+            "active": false
+        },
+        {
+            "classId": 121,
+            "className": "ClairCN",
+            "name": "Cannon Shooter Claire",
+            "active": false
+        },
+        {
+            "classId": 122,
+            "className": "ClairCG",
+            "name": "Cutie Claire",
+            "active": false
+        },
+        {
+            "classId": 123,
+            "className": "Mireille",
+            "name": "Mireille",
+            "active": false
+        },
+        {
+            "classId": 124,
+            "className": "Sesil",
+            "name": "Cecille",
+            "active": false
+        },
+        {
+            "classId": 125,
+            "className": "Laura",
+            "name": "Lora Constans",
+            "active": false
+        },
+        {
+            "classId": 126,
+            "className": "BLudin",
+            "name": "Blue Flame Ludin",
+            "active": false
+        },
+        {
+            "classId": 127,
+            "className": "SLudin",
+            "name": "Student President Ludin",
+            "active": false
+        },
+        {
+            "classId": 128,
+            "className": "Patrick",
+            "name": "Patrick",
+            "active": false
+        },
+        {
+            "classId": 129,
+            "className": "Gean",
+            "name": "Long",
+            "active": false
+        },
+        {
+            "classId": 130,
+            "className": "Berthe",
+            "name": "Berthe and Charles",
+            "active": false
+        },
+        {
+            "classId": 131,
+            "className": "Jane",
+            "name": "Jane",
+            "active": false
+        },
+        {
+            "classId": 132,
+            "className": "Jin",
+            "name": "Jin",
+            "active": false
+        },
+        {
+            "classId": 133,
+            "className": "Roreta",
+            "name": "Loreta",
+            "active": false
+        },
+        {
+            "classId": 134,
+            "className": "Anies",
+            "name": "Anis",
+            "active": false
+        },
+        {
+            "classId": 135,
+            "className": "CLeonele",
+            "name": "Cadet Leonele",
+            "active": false
+        },
+        {
+            "classId": 136,
+            "className": "Van",
+            "name": "Van",
+            "active": false
+        },
+        {
+            "classId": 137,
+            "className": "IceMontoro",
+            "name": "Snowflake Montoro",
+            "active": false
+        },
+        {
+            "classId": 138,
+            "className": "Elizabeth",
+            "name": "Elizabeth",
+            "active": false
+        },
+        {
+            "classId": 139,
+            "className": "Dolores",
+            "name": "Dolores",
+            "active": false
+        },
+        {
+            "classId": 140,
+            "className": "Lorraine",
+            "name": "Loraine",
+            "active": false
+        },
+        {
+            "classId": 141,
+            "className": "Bryan",
+            "name": "Bryan",
+            "active": false
+        },
+        {
+            "classId": 142,
+            "className": "BryanRare",
+            "name": "Divine Hammer Bryan",
+            "active": false
+        },
+        {
+            "classId": 143,
+            "className": "Bane",
+            "name": "Bane",
+            "active": false
+        },
+        {
+            "classId": 144,
+            "className": "Lynn",
+            "name": "Lynn",
+            "active": false
+        },
+        {
+            "classId": 145,
+            "className": "LynnRare",
+            "name": "Silver Flash Lynn",
+            "active": false
+        },
+        {
+            "classId": 146,
+            "className": "Evil",
+            "name": "Evil",
+            "active": false
+        },
+        {
+            "classId": 147,
+            "className": "Kevin",
+            "name": "Kevin",
+            "active": false
+        },
+        {
+            "classId": 148,
+            "className": "Leona",
+            "name": "Leona Vernier",
+            "active": false
+        },
+        {
+            "classId": 149,
+            "className": "Leona2",
+            "name": "Code Name L",
+            "active": false
+        },
+        {
+            "classId": 150,
+            "className": "Sariel",
+            "name": "Sariel",
+            "active": false
+        },
+        {
+            "classId": 151,
+            "className": "Sariel2",
+            "name": "Reaper Sariel",
+            "active": false
+        },
+        {
+            "classId": 152,
+            "className": "JudithRare",
+            "name": "Judith",
+            "active": false
+        },
+        {
+            "classId": 153,
+            "className": "Judith",
+            "name": "Empyrium Judith",
+            "active": false
+        },
+        {
+            "classId": 154,
+            "className": "Risky",
+            "name": "Risky",
+            "active": false
+        },
+        {
+            "classId": 155,
+            "className": "Amy",
+            "name": "Amy",
+            "active": false
+        },
+        {
+            "classId": 156,
+            "className": "AmyRare",
+            "name": "Cadet Amy",
+            "active": false
+        },
+        {
+            "classId": 157,
+            "className": "Neo10",
+            "name": "Neo",
+            "active": false
+        },
+        {
+            "classId": 158,
+            "className": "KevinICE",
+            "name": "Snowflake Kevin",
+            "active": false
+        },
+        {
+            "classId": 159,
+            "className": "Yuliana",
+            "name": "Juliana",
+            "active": false
+        },
+        {
+            "classId": 160,
+            "className": "Diertrichherberthe",
+            "name": "Dietrich",
+            "active": false
+        },
+        {
+            "classId": 161,
+            "className": "DiertrichRare",
+            "name": "Consul Dietrich",
+            "active": false
+        },
+        {
+            "classId": 162,
+            "className": "Vanessa",
+            "name": "Vanessa",
+            "active": false
+        },
+        {
+            "classId": 164,
+            "className": "Ruosiba",
+            "name": "Anred Le Ohsiva",
+            "active": false
+        },
+        {
+            "classId": 165,
+            "className": "Mifuyu_Event",
+            "name": "Mifuyu",
+            "active": false
+        },
+        {
+            "classId": 166,
+            "className": "Hektor",
+            "name": "Hector Card",
+            "active": false
+        },
+        {
+            "classId": 167,
+            "className": "Nina",
+            "name": "Nina",
+            "active": false
+        },
+        {
+            "classId": 168,
+            "className": "Jaina",
+            "name": "Jaina",
+            "active": false
+        },
+        {
+            "classId": 169,
+            "className": "Kano2",
+            "name": "Blood Navy Cano",
+            "active": false
+        },
+        {
+            "classId": 170,
+            "className": "Kano2Rare",
+            "name": "Supreme Commander Cano",
+            "active": false
+        },
+        {
+            "classId": 171,
+            "className": "Aclla",
+            "name": "Aclla",
+            "active": false
+        },
+        {
+            "classId": 172,
+            "className": "NatalieRare",
+            "name": "Vanshee Natalie",
+            "active": false
+        },
+        {
+            "classId": 173,
+            "className": "Daisy",
+            "name": "Daisy",
+            "active": false
+        },
+        {
+            "classId": 174,
+            "className": "Becky",
+            "name": "Becky",
+            "active": false
+        },
+        {
+            "classId": 175,
+            "className": "Kei",
+            "name": "Kay",
+            "active": false
+        },
+        {
+            "classId": 176,
+            "className": "BertheIce",
+            "name": "Snowflake Berthe and Charles",
+            "active": false
+        },
+        {
+            "classId": 177,
+            "className": "Scarlet",
+            "name": "Scarlet",
+            "active": false
+        },
+        {
+            "classId": 178,
+            "className": "Ciel",
+            "name": "Ciel",
+            "active": false
+        },
+        {
+            "classId": 179,
+            "className": "Hermes",
+            "name": "Hermes",
+            "active": false
+        },
+        {
+            "classId": 180,
+            "className": "FighterGame",
+            "name": "Fighter",
+            "active": false
+        },
+        {
+            "classId": 181,
+            "className": "MusketeerGame",
+            "name": "Musketeer",
+            "active": false
+        },
+        {
+            "classId": 182,
+            "className": "CatherineSTRGame",
+            "name": "Catherine (STR)",
+            "active": false
+        },
+        {
+            "classId": 183,
+            "className": "WizardGame",
+            "name": "Wizard",
+            "active": false
+        },
+        {
+            "classId": 184,
+            "className": "RavenGame",
+            "name": "Raven",
+            "active": false
+        },
+        {
+            "classId": 185,
+            "className": "CustomSpyOlivia",
+            "name": "Spy Olivia",
+            "active": false
+        },
+        {
+            "classId": 186,
+            "className": "CustomKess",
+            "name": "Caisse",
+            "active": false
+        },
+        {
+            "classId": 187,
+            "className": "CustomNeolith",
+            "name": "Sir Lyndon",
+            "active": false
+        },
+        {
+            "classId": 188,
+            "className": "CustomVeil",
+            "name": "Veil",
+            "active": false
+        },
+        {
+            "classId": 189,
+            "className": "CustomEduardo",
+            "name": "Edward",
+            "active": false
+        },
+        {
+            "classId": 190,
+            "className": "CustomFighter",
+            "name": "Fighter",
+            "active": false
+        },
+        {
+            "classId": 191,
+            "className": "CustomGrace",
+            "name": "Bernelli",
+            "active": false
+        },
+        {
+            "classId": 192,
+            "className": "CustomNena",
+            "name": "Nena",
+            "active": false
+        },
+        {
+            "classId": 193,
+            "className": "CustomSerious",
+            "name": "Sirius",
+            "active": false
+        },
+        {
+            "classId": 194,
+            "className": "CustomLaura",
+            "name": "Lora Constans",
+            "active": false
+        },
+        {
+            "classId": 195,
+            "className": "CustomPatrick",
+            "name": "Patrick",
+            "active": false
+        },
+        {
+            "classId": 196,
+            "className": "CustomCLeonele",
+            "name": "Cadet Leonele",
+            "active": false
+        },
+        {
+            "classId": 197,
+            "className": "CustomRoreta",
+            "name": "Loreta",
+            "active": false
+        },
+        {
+            "classId": 198,
+            "className": "CustomGracielo",
+            "name": "Gracielo",
+            "active": false
+        },
+        {
+            "classId": 199,
+            "className": "CustomLeona",
+            "name": "L",
+            "active": false
+        },
+        {
+            "classId": 200,
+            "className": "Neolith",
+            "name": "Sir Lyndon",
+            "active": false
+        },
+        {
+            "classId": 201,
+            "className": "GameQueen",
+            "name": "Operator",
+            "active": false
+        },
+        {
+            "classId": 202,
+            "className": "AlejandroGM",
+            "name": "Lyndon",
+            "active": false
+        },
+        {
+            "classId": 203,
+            "className": "Violante",
+            "name": "Test sever QA Team",
+            "active": false
+        },
+        {
+            "classId": 204,
+            "className": "Driewolf",
+            "name": "Fritz",
+            "active": false
+        },
+        {
+            "classId": 205,
+            "className": "DoctorTorse",
+            "name": "Dr.Torsche",
+            "active": false
+        },
+        {
+            "classId": 206,
+            "className": "Novia",
+            "name": "Novia",
+            "active": false
+        },
+        {
+            "classId": 207,
+            "className": "Montoro",
+            "name": "Wicked Montoro",
+            "active": false
+        },
+        {
+            "classId": 208,
+            "className": "SierraLos",
+            "name": "Little Sierra",
+            "active": false
+        },
+        {
+            "classId": 209,
+            "className": "LeonoraLos",
+            "name": "Leonora Rose",
+            "active": false
+        },
+        {
+            "classId": 210,
+            "className": "SimonAllende",
+            "name": "Simon Ayende",
+            "active": false
+        },
+        {
+            "classId": 211,
+            "className": "PrincesaGabriela",
+            "name": "Princess Gabriella",
+            "active": false
+        },
+        {
+            "classId": 212,
+            "className": "DilosLatemn",
+            "name": "Dilos Latemn",
+            "active": false
+        },
+        {
+            "classId": 213,
+            "className": "GameQueen2",
+            "name": "Operator2",
+            "active": false
+        },
+        {
+            "classId": 215,
+            "className": "CustomVan",
+            "name": "Van",
+            "active": false
+        },
+        {
+            "classId": 216,
+            "className": "CustomAnies",
+            "name": "Anis",
+            "active": false
+        },
+        {
+            "classId": 217,
+            "className": "CustomArmFgt",
+            "name": "Fighter",
+            "active": false
+        },
+        {
+            "classId": 218,
+            "className": "CustomJudith",
+            "name": "Judith",
+            "active": false
+        },
+        {
+            "classId": 219,
+            "className": "CustomLynn",
+            "name": "Lynn",
+            "active": false
+        },
+        {
+            "classId": 220,
+            "className": "CustomSherlin",
+            "name": "Cherlyn",
+            "active": false
+        },
+        {
+            "classId": 221,
+            "className": "CustomDiertrich",
+            "name": "Dietrich",
+            "active": false
+        },
+        {
+            "classId": 222,
+            "className": "CustomVendetta",
+            "name": "Valeria Vendetta",
+            "active": false
+        },
+        {
+            "classId": 223,
+            "className": "CustomLiung",
+            "name": "Liung",
+            "active": false
+        },
+        {
+            "classId": 224,
+            "className": "CustomFreeday",
+            "name": "Friede",
+            "active": false
+        },
+        {
+            "classId": 225,
+            "className": "CustomSpirit",
+            "name": "Rose, The Spirit",
+            "active": false
+        },
+        {
+            "classId": 226,
+            "className": "CustomWizard",
+            "name": "Wizard",
+            "active": false
+        },
+        {
+            "classId": 227,
+            "className": "CustomKei",
+            "name": "Kay",
+            "active": false
+        },
+        {
+            "classId": 228,
+            "className": "CustomDietrich",
+            "name": "Kurt",
+            "active": false
+        },
+        {
+            "classId": 229,
+            "className": "CustomClaude",
+            "name": "Claude",
+            "active": false
+        },
+        {
+            "classId": 230,
+            "className": "Joshua",
+            "name": "Joshua",
+            "active": false
+        },
+        {
+            "classId": 231,
+            "className": "Joshua2",
+            "name": "Queen Sereni Joshua",
+            "active": false
+        },
+        {
+            "classId": 232,
+            "className": "Yeganeh2",
+            "name": "Scavenger Diego",
+            "active": false
+        },
+        {
+            "classId": 233,
+            "className": "Kael",
+            "name": "Kael",
+            "active": false
+        },
+        {
+            "classId": 234,
+            "className": "KaelRare",
+            "name": "White Wolf",
+            "active": false
+        },
+        {
+            "classId": 235,
+            "className": "Rachel2",
+            "name": "Lady Rachel",
+            "active": false
+        },
+        {
+            "classId": 236,
+            "className": "Rachel2Rare",
+            "name": "Lead Manager Rachel",
+            "active": false
+        },
+        {
+            "classId": 237,
+            "className": "DariaRare",
+            "name": "Crusader Daria",
+            "active": false
+        },
+        {
+            "classId": 238,
+            "className": "Eileen",
+            "name": "Eileen",
+            "active": false
+        },
+        {
+            "classId": 239,
+            "className": "EileenRare",
+            "name": "Rubiana",
+            "active": false
+        },
+        {
+            "classId": 240,
+            "className": "BertheRare",
+            "name": "Arbitrator Berthe",
+            "active": false
+        },
+        {
+            "classId": 241,
+            "className": "Anies2",
+            "name": "Executor Anis",
+            "active": false
+        },
+        {
+            "classId": 242,
+            "className": "bknight",
+            "name": "Doom Slave",
+            "active": false
+        },
+        {
+            "classId": 243,
+            "className": "Calyce2",
+            "name": "Mercenary Captain Calypso",
+            "active": false
+        },
+        {
+            "classId": 244,
+            "className": "Misa",
+            "name": "Misa",
+            "active": false
+        },
+        {
+            "classId": 245,
+            "className": "Coa",
+            "name": "CoA",
+            "active": false
+        },
+        {
+            "classId": 246,
+            "className": "CoaRare",
+            "name": "Guardian CoA",
+            "active": false
+        },
+        {
+            "classId": 247,
+            "className": "Kiss",
+            "name": "Kiss",
+            "active": false
+        },
+        {
+            "classId": 249,
+            "className": "CustomYeganeh2",
+            "name": "Scavenger Diego",
+            "active": false
+        },
+        {
+            "classId": 250,
+            "className": "HMonster",
+            "name": "Operator mon",
+            "active": false
+        },
+        {
+            "classId": 251,
+            "className": "HNPC",
+            "name": "Recruited NPC",
+            "active": false
+        },
+        {
+            "classId": 252,
+            "className": "Sakura",
+            "name": "Princess Sakura",
+            "active": false
+        },
+        {
+            "classId": 253,
+            "className": "SakuraRare",
+            "name": "Sakura",
+            "active": false
+        },
+        {
+            "classId": 254,
+            "className": "Aisha",
+            "name": "Aisha",
+            "active": false
+        },
+        {
+            "classId": 255,
+            "className": "Navas",
+            "name": "Navas",
+            "active": false
+        },
+        {
+            "classId": 256,
+            "className": "Loo",
+            "name": "Ru",
+            "active": false
+        },
+        {
+            "classId": 257,
+            "className": "LooRare",
+            "name": "Guardian Ru",
+            "active": false
+        },
+        {
+            "classId": 258,
+            "className": "Zaved",
+            "name": "Zaved",
+            "active": false
+        },
+        {
+            "classId": 259,
+            "className": "Miho",
+            "name": "Miho",
+            "active": false
+        },
+        {
+            "classId": 260,
+            "className": "Miha",
+            "name": "Miha",
+            "active": false
+        },
+        {
+            "classId": 261,
+            "className": "Barrelrare",
+            "name": "Master Sergeant Barrel",
+            "active": false
+        },
+        {
+            "classId": 262,
+            "className": "Cassandra",
+            "name": "Cassandra",
+            "active": false
+        },
+        {
+            "classId": 263,
+            "className": "Moon",
+            "name": "Moon",
+            "active": false
+        },
+        {
+            "classId": 264,
+            "className": "Nike",
+            "name": "Nike",
+            "active": false
+        },
+        {
+            "classId": 265,
+            "className": "Van2",
+            "name": "Archbishop",
+            "active": false
+        },
+        {
+            "classId": 266,
+            "className": "Ornella",
+            "name": "Ornella",
+            "active": false
+        },
+        {
+            "classId": 267,
+            "className": "OrnellaBlack",
+            "name": "Canna",
+            "active": false
+        },
+        {
+            "classId": 268,
+            "className": "Charlotrare",
+            "name": "Charlotte",
+            "active": false
+        },
+        {
+            "classId": 269,
+            "className": "RominaRare",
+            "name": "Cadet Romina",
+            "active": false
+        },
+        {
+            "classId": 270,
+            "className": "Hildegard",
+            "name": "Hildegard",
+            "active": false
+        },
+        {
+            "classId": 271,
+            "className": "Valkyrie",
+            "name": "Freya",
+            "active": false
+        },
+        {
+            "classId": 272,
+            "className": "Kess2",
+            "name": "Resistance Caisse",
+            "active": false
+        },
+        {
+            "classId": 273,
+            "className": "JD2",
+            "name": "Resistance JD",
+            "active": false
+        },
+        {
+            "classId": 274,
+            "className": "Heyran2",
+            "name": "Resistance Heyran",
+            "active": false
+        },
+        {
+            "classId": 275,
+            "className": "Chungha",
+            "name": "Chungha",
+            "active": false
+        },
+        {
+            "classId": 276,
+            "className": "Cristina",
+            "name": "Cristina",
+            "active": false
+        },
+        {
+            "classId": 278,
+            "className": "Tom",
+            "name": "Tom",
+            "active": false
+        },
+        {
+            "classId": 279,
+            "className": "Ania2",
+            "name": "Guardian Ania",
+            "active": false
+        },
+        {
+            "classId": 280,
+            "className": "NarRare",
+            "name": "Guardian Nar",
+            "active": false
+        },
+        {
+            "classId": 281,
+            "className": "Violet",
+            "name": "Violet",
+            "active": false
+        },
+        {
+            "classId": 282,
+            "className": "Violet2",
+            "name": "Fenrir",
+            "active": false
+        },
+        {
+            "classId": 283,
+            "className": "Sharon2",
+            "name": "Sharon",
+            "active": false
+        },
+        {
+            "classId": 284,
+            "className": "Bedel",
+            "name": "Bedel",
+            "active": false
+        },
+        {
+            "classId": 285,
+            "className": "MariaMayer",
+            "name": "MariaMayer",
+            "active": false
+        },
+        {
+            "classId": 286,
+            "className": "Veatrice2",
+            "name": "Veatrice2",
+            "active": false
+        },
+        {
+            "classId": 287,
+            "className": "Chloe2",
+            "name": "CodeName C",
+            "active": false
+        },
+        {
+            "classId": 288,
+            "className": "Tora2",
+            "name": "CodeName T",
+            "active": false
+        },
+        {
+            "classId": 289,
+            "className": "RioRare",
+            "name": "Conductor Rio",
+            "active": false
+        },
+        {
+            "classId": 290,
+            "className": "LorchRare",
+            "name": "Meister Lorch",
+            "active": false
+        },
+        {
+            "classId": 291,
+            "className": "Sherry",
+            "name": "Sherry",
+            "active": false
+        },
+        {
+            "classId": 292,
+            "className": "Chloe",
+            "name": "Chloe",
+            "active": false
+        },
+        {
+            "classId": 293,
+            "className": "Kein",
+            "name": "Kein",
+            "active": false
+        },
+        {
+            "classId": 294,
+            "className": "Bianca",
+            "name": "Bianca",
+            "active": false
+        },
+        {
+            "classId": 295,
+            "className": "Isaac",
+            "name": "Isaac",
+            "active": false
+        },
+        {
+            "classId": 296,
+            "className": "Mi2",
+            "name": "Designer Karjalainen",
+            "active": false
+        },
+        {
+            "classId": 297,
+            "className": "Ivy",
+            "name": "Ivy Finley",
+            "active": false
+        },
+        {
+            "classId": 298,
+            "className": "Delfina",
+            "name": "Delfina",
+            "active": false
+        },
+        {
+            "classId": 299,
+            "className": "DelfinaRare",
+            "name": "Royal Guard Delfina",
+            "active": false
+        },
+        {
+            "classId": 300,
+            "className": "Sorscha",
+            "name": "sorscha",
+            "active": false
+        },
+        {
+            "classId": 301,
+            "className": "Giltine",
+            "name": "Giltine",
+            "active": false
+        },
+        {
+            "classId": 302,
+            "className": "Psyche",
+            "name": "Psyche",
+            "active": false
+        },
+        {
+            "classId": 303,
+            "className": "CustomViking",
+            "name": "Lhote",
+            "active": false
+        },
+        {
+            "classId": 304,
+            "className": "CustomCoa",
+            "name": "CoA",
+            "active": false
+        },
+        {
+            "classId": 305,
+            "className": "CustomVan2",
+            "name": "Archbishop",
+            "active": false
+        },
+        {
+            "classId": 308,
+            "className": "CustomCharlotrare",
+            "name": "Charlotte",
+            "active": false
+        },
+        {
+            "classId": 500,
+            "className": "Rosie",
+            "name": "Rosie",
+            "active": false
+        },
+        {
+            "classId": 501,
+            "className": "Aether",
+            "name": "Aether",
+            "active": false
+        },
+        {
+            "classId": 502,
+            "className": "Lysette",
+            "name": "Lysette",
+            "active": false
+        },
+        {
+            "classId": 503,
+            "className": "Nicol",
+            "name": "Nicol",
+            "active": false
+        },
+        {
+            "classId": 504,
+            "className": "Diluca",
+            "name": "Diluca",
+            "active": false
+        },
+        {
+            "classId": 505,
+            "className": "Rakicia",
+            "name": "Rakicia",
+            "active": false
+        },
+        {
+            "classId": 506,
+            "className": "Belith",
+            "name": "Belith",
+            "active": false
+        },
+        {
+            "classId": 507,
+            "className": "Brigitte",
+            "name": "Brigitte",
+            "active": false
+        },
+        {
+            "classId": 508,
+            "className": "Dobaselrane",
+            "name": "DoBaselrane",
+            "active": false
+        },
+        {
+            "classId": 509,
+            "className": "Lobaselrane",
+            "name": "LoBaselrane",
+            "active": false
+        },
+        {
+            "classId": 510,
+            "className": "Ellie",
+            "name": "Ellie",
+            "active": false
+        },
+        {
+            "classId": 511,
+            "className": "Ellie2",
+            "name": "Ellie Craig",
+            "active": false
+        },
+        {
+            "classId": 512,
+            "className": "Kirna",
+            "name": "Kirna",
+            "active": false
+        },
+        {
+            "classId": 513,
+            "className": "Heka",
+            "name": "Heka",
+            "active": false
+        },
+        {
+            "classId": 514,
+            "className": "Angelic",
+            "name": "Angelic",
+            "active": false
+        },
+        {
+            "classId": 515,
+            "className": "Laval",
+            "name": "Laval",
+            "active": false
+        },
+        {
+            "classId": 516,
+            "className": "Drachen",
+            "name": "Drachen",
+            "active": false
+        },
+        {
+            "classId": 517,
+            "className": "Meriel",
+            "name": "Meriel",
+            "active": false
+        }
+    ]
+}
