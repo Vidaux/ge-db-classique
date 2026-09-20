@@ -1,0 +1,8 @@
+/.idea/
+/ge/
+/tools/dictionary/
+/tools/ies/
+/tools/ui/
+/tools/xml/
+*.zip
+/tools/regen_output.txt
