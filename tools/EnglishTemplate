@@ -263,6 +263,79 @@ function NormalizeCharacterSearchText(value) {
   return (value || "").toUpperCase().replace(/[^A-Z0-9]+/g, " ").trim();
 }
 
+var CharacterAvailability = null;
+var CharacterAvailabilityDefaultActive = false;
+
+function SetCharacterAvailability(data) {
+  const byClassId = {};
+  const byClassName = {};
+  const byName = {};
+  if (data && Array.isArray(data.characters)) {
+    CharacterAvailabilityDefaultActive = data.defaultActive === true;
+    for (let i = 0; i < data.characters.length; i++) {
+      const character = data.characters[i];
+      const active = character.active === true;
+      if (character.classId !== undefined && character.classId !== null) {
+        byClassId[String(character.classId)] = active;
+      }
+      if (character.className) {
+        byClassName[String(character.className)] = active;
+      }
+      if (character.name) {
+        byName[String(character.name)] = active;
+      }
+    }
+    CharacterAvailability = {
+      byClassId: byClassId,
+      byClassName: byClassName,
+      byName: byName
+    };
+  }
+}
+
+function IsCharacterActive(element) {
+  const classId = element.getAttribute("data-class-id") || "";
+  const className = element.getAttribute("data-class-name") || "";
+  const name = element.getAttribute("data-name") || "";
+  if (CharacterAvailability) {
+    if (Object.prototype.hasOwnProperty.call(CharacterAvailability.byClassId, classId)) {
+      return CharacterAvailability.byClassId[classId];
+    }
+    if (Object.prototype.hasOwnProperty.call(CharacterAvailability.byClassName, className)) {
+      return CharacterAvailability.byClassName[className];
+    }
+    if (Object.prototype.hasOwnProperty.call(CharacterAvailability.byName, name)) {
+      return CharacterAvailability.byName[name];
+    }
+    return CharacterAvailabilityDefaultActive;
+  }
+  return element.getAttribute("data-active") !== "false";
+}
+
+function SetCharacterVisibility(element, visible) {
+  element.hidden = !visible;
+  element.classList.toggle("is-character-filtered-out", !visible);
+  element.style.display = visible ? "" : "none";
+}
+
+function LoadCharacterAvailability() {
+  if (!document.getElementById("Character")) return;
+  FilterCharacters();
+  if (typeof fetch !== "function") return;
+  fetch("./assets/data/character-availability.json", { cache: "no-store" })
+    .then(function(response) {
+      return response.ok ? response.json() : null;
+    })
+    .then(function(data) {
+      if (!data) return;
+      SetCharacterAvailability(data);
+      FilterCharacters();
+    })
+    .catch(function() {
+      FilterCharacters();
+    });
+}
+
 function FilterCharacters() {
   var input, filter, table, tr, td, i, txtValue, cards;
   input = document.getElementById("myInput");
@@ -275,7 +348,7 @@ function FilterCharacters() {
       td = tr[i].getElementsByTagName("td")[0];
       if (td) {
         txtValue = tr[i].getAttribute("data-search") || tr[i].textContent || tr[i].innerText || "";
-        tr[i].style.display = NormalizeCharacterSearchText(txtValue).indexOf(filter) > -1 ? "" : "none";
+        SetCharacterVisibility(tr[i], IsCharacterActive(tr[i]) && NormalizeCharacterSearchText(txtValue).indexOf(filter) > -1);
       }
     }
   }
@@ -283,7 +356,7 @@ function FilterCharacters() {
   cards = document.querySelectorAll(".character-card");
   for (i = 0; i < cards.length; i++) {
     txtValue = cards[i].getAttribute("data-search") || cards[i].getAttribute("data-name") || cards[i].textContent || "";
-    cards[i].style.display = NormalizeCharacterSearchText(txtValue).indexOf(filter) > -1 ? "" : "none";
+    SetCharacterVisibility(cards[i], IsCharacterActive(cards[i]) && NormalizeCharacterSearchText(txtValue).indexOf(filter) > -1);
   }
 }
 
@@ -455,6 +528,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     changepage('Fighter',70, 60, 70, 60, 40, 50,'Fighter - They fight on the front line and are capable of using a wide variety of weapons. They are key characters of any MCC or Squad.', '[Pioneer][Heavy Armor][Proximity]', 'DEF +3 *2', './images/Barrack/Fighter_f_barrack_on.bmp', `<img src="./images/Misc/leather.jpg" alt="Leather armor"><img src="./images/Misc/Metal.jpg" alt="Metal armor">`, 1, `Provoke`, `job_provoke.bmp`, `Up to 8 enemies within a range of 8m`, `0 sec.`, `0 sec.` ,`1.2 sec.`, `100 SP;`, `<p>Lv.1</p><p id='JobSkillDesc1'>Duration 15 secondsnMonster Defense Power-11</p><br><p>Lv.10</p><p id='JobSkillDesc10'>Duration 15 secondsnMonster Defense Power - 20nMoving speed reduced by 5%</p><p>Lv.11</p><p id='JobSkillDesc11'>Duration 15 secondsnMonster Defense Power - 21nMoving speed reduced by 6%</p><p>Lv.12</p><p id='JobSkillDesc12'>Duration 15 secondsnMonster Defense Power - 22nMoving speed reduced by 7%</p>`, dth()+dtrow(`None`,`None`,`[Bareknuckle]`)+dtrow(`Sword`,`None`,`[Back Guard][Equites]`)+dtrow(`Sword`,`Shield`,`[Back Guard][High Guard]`)+dtrow(`Sword`,`Sword`,`[Hack and Slash]`)+dtrow(`Sword`,`Pistol`,`[Heaven or Hell]`)+dtrow(`Rapier`,`None`,`[Epee Garde][Sabre Garde]`)+dtrow(`Sabre`,`None`,`[Middle Guard][Low Guard]`)+dtrow(`THSword`,`None`,`[Plow Guard][Roof Guard][Sidewinder][Hanging Guard]`)+dtrow(`Polearm`,`None`,`[Blandir Cruz][Mighty Cruz][Tronada Cruz]`)+dtrow(`Dagger`,`None`,`[Esgrima]`)+dtrow(`Pistol`,`None`,`[Freestyle Shot]`)+dtrow(`Pistol`,`Pistol`,`[Double Gun Shot]`)+dtrow(`Rapier`,`Pistol`,`[Advance Garde]`)+dtrow(`Blunt`,`None`,`[Back Guard]`)+dtrow(`Blunt`,`Shield`,`[Back Guard][The Defender][Crusader]`)+dtrow(`Javelin`,`None`,`[Stave Guard][Peltast]`)+dtrow(`Javelin`,`Shield`,`[Stave Guard][Peltast]`)+`</table>`,WriteStance10010()+WriteStance10110()+WriteStance10360()+WriteStance10120()+WriteStance10130()+WriteStance10710()+WriteStance10210()+WriteStance10220()+WriteStance10310()+WriteStance10340()+WriteStance10410()+WriteStance10430()+WriteStance10440()+WriteStance10460()+WriteStance10510()+WriteStance10540()+WriteStance10550()+WriteStance10610()+WriteStance11020()+WriteStance11030()+WriteStance10260()+WriteStance10150()+WriteStance10170()+WriteStance10530()+WriteStance10560()+'');
     ToggleContent(`MainContainer`, 'Character');
     ToggleContent(`Character`, 'CharacterListView');
+    LoadCharacterAvailability();
   }
   const sidePanel = document.body ? document.body.getAttribute("data-side-panel") : "";
   setSidePanel(sidePanel || null, sidePanel ? "docked" : "none");

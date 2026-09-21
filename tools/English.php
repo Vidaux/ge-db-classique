@@ -1700,18 +1700,53 @@ function CharacterAvailabilityJsonPath() {
 }
 
 function WriteCharacterAvailabilityJson() {
-	global $Characters;
+	global $Characters, $CharacterAvailabilityByClassId;
 
 	$characters = array();
+	$CharacterAvailabilityByClassId = array();
 	$defaultActiveClassIds = array(1, 2, 3, 4, 5);
+	$existing = ReadJsonFile(CharacterAvailabilityJsonPath(), array('defaultActive' => false, 'characters' => array()));
+	$existingByClassId = array();
+	$existingByClassName = array();
+	$existingByName = array();
+	if (isset($existing['characters']) && is_array($existing['characters'])) {
+		foreach ($existing['characters'] as $existingCharacter) {
+			if (!is_array($existingCharacter) || !array_key_exists('active', $existingCharacter)) {
+				continue;
+			}
+			$active = (bool)$existingCharacter['active'];
+			if (isset($existingCharacter['classId'])) {
+				$existingByClassId[(int)$existingCharacter['classId']] = $active;
+			}
+			if (isset($existingCharacter['className']) && $existingCharacter['className'] !== '') {
+				$existingByClassName[(string)$existingCharacter['className']] = $active;
+			}
+			if (isset($existingCharacter['name']) && $existingCharacter['name'] !== '') {
+				$existingByName[(string)$existingCharacter['name']] = $active;
+			}
+		}
+	}
+
 	if (isset($Characters['ClassID']) && is_array($Characters['ClassID'])) {
 		foreach ($Characters['ClassID'] as $id) {
 			$classId = (int)$id;
+			$className = (string)($Characters['ClassName'][$id] ?? '');
+			$name = (string)($Characters['Name'][$id] ?? '');
+			if (array_key_exists($classId, $existingByClassId)) {
+				$active = $existingByClassId[$classId];
+			} elseif ($className !== '' && array_key_exists($className, $existingByClassName)) {
+				$active = $existingByClassName[$className];
+			} elseif ($name !== '' && array_key_exists($name, $existingByName)) {
+				$active = $existingByName[$name];
+			} else {
+				$active = in_array($classId, $defaultActiveClassIds, true);
+			}
+			$CharacterAvailabilityByClassId[$classId] = $active;
 			$characters[] = array(
 				'classId' => $classId,
-				'className' => (string)($Characters['ClassName'][$id] ?? ''),
-				'name' => (string)($Characters['Name'][$id] ?? ''),
-				'active' => in_array($classId, $defaultActiveClassIds, true),
+				'className' => $className,
+				'name' => $name,
+				'active' => $active,
 			);
 		}
 	}
@@ -2895,6 +2930,7 @@ ob_start();
 foreach ($Characters['ClassID'] as $id)
 {if(in_array($Characters['ClassName'][$id],$NPCList['ClassName'])&($Characters['JobSkill'][$id]!="0"))
 	{
+		$CharacterIsActive = !empty($CharacterAvailabilityByClassId[(int)$id]);
 		//Just a bit more fancy text changes on character buffs.
 			$Characters['CharacterBuff'][$id]=str_replace('ChaDEF','DEF +3',($Characters['CharacterBuff'][$id]));
 			$Characters['CharacterBuff'][$id]=str_replace('ChaCast','Cast Time -2%',($Characters['CharacterBuff'][$id]));
@@ -2962,6 +2998,15 @@ if ($Characters['Gender'][$id]=="Male"){
 	$Port = WebImageSrc('Barrack', $Characters['ClassName'][$id].'_f_barrack_on.bmp');
 }
 
+$CharacterJobSkillId = $Characters['JobSkill'][$id] ?? '0';
+if($CharacterJobSkillId !== '0' && isset($Skill['FileName'][$CharacterJobSkillId]))
+{
+CopyToWebImage(GeDataPath('ui/illust/'.$Skill['FileName'][$CharacterJobSkillId].'.bmp'), 'Skills', $Skill['FileName'][$CharacterJobSkillId].'.bmp');
+}
+if (!$CharacterIsActive) {
+	continue;
+}
+
 $CharacterStats = array(
 	'STR' => (int)$Characters['STR'][$id],
 	'AGI' => (int)$Characters['AGI'][$id],
@@ -2991,7 +3036,6 @@ $CharacterMainStat = CharacterMainStat($CharacterStats);
 	.$Characters['initLv'][$id].", "
 	.'`'.$Skill['Name'][$Characters['JobSkill'][$id]]."`, "
 	.'`'.$Skill['FileName'][$Characters['JobSkill'][$id]].'.bmp`, ';
-	CopyToWebImage(GeDataPath('ui/illust/'.$Skill['FileName'][$Characters['JobSkill'][$id]].'.bmp'), 'Skills', $Skill['FileName'][$Characters['JobSkill'][$id]].'.bmp');
 	echo'`'.$Skill['TargetDesc'][$Characters['JobSkill'][$id]]."`, "
 	.'`'.($Skill['CoolDown'][$Characters['JobSkill'][$id]]/1000).' sec.`, '
 	.'`'.($Skill['CastTime'][$Characters['JobSkill'][$id]]/1000).' sec.` ,'
@@ -3036,8 +3080,10 @@ foreach ($StanIDs as $IDS){
 	$CharacterCardOnclick = htmlspecialchars($CharacterAction."OpenCharacterDetail('CharacterCardsPanel');", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	$CharacterBrowseOnclick = htmlspecialchars($CharacterAction."OpenCharacterDetail('CharacterBrowsePanel');", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	$CharacterSearchText = implode(' ', array_merge(array($Characters['Name'][$id], $Characters['ClassName'][$id], $Skill['Name'][$Characters['JobSkill'][$id]]), $CharacterWeaponSearchParts, $CharacterStanceSearchParts));
-	$CharCards .= '<button type="button" class="character-card" data-name="'.Html($Characters['Name'][$id]).'" data-search="'.Html($CharacterSearchText).'" data-main-stat="'.Html($CharacterMainStat['Name']).'" data-main-value="'.Html($CharacterMainStat['Value']).'" data-str="'.Html($CharacterStats['STR']).'" data-agi="'.Html($CharacterStats['AGI']).'" data-dex="'.Html($CharacterStats['DEX']).'" data-hp="'.Html($CharacterStats['HP']).'" data-int="'.Html($CharacterStats['INT']).'" data-sen="'.Html($CharacterStats['SEN']).'" onclick="'.$CharacterCardOnclick.'"><span class="character-card-image"><img src="'.Html($Port).'" alt="'.Html($Characters['Name'][$id]).'"></span><span class="character-card-name">'.Html($Characters['Name'][$id]).'</span><span class="character-card-stat" style="display:none"></span></button>';
-	echo '<tr data-search="'.Html($CharacterSearchText).'" onclick="'.$CharacterBrowseOnclick.'"><td>'.$Characters['Name'][$id].'</td><td>'.$CharacterMainStat['Display'].'</td><td>'.$Characters['STR'][$id].'</td><td>'.$Characters['AGI'][$id].'</td><td>'.$Characters['DEX'][$id].'</td><td>'.$Characters['CON'][$id].'</td><td>'.$Characters['INT'][$id].'</td><td>'.$Characters['CHA'][$id].'</td><td>';
+	$CharacterActiveAttr = $CharacterIsActive ? 'true' : 'false';
+	$CharacterHiddenAttr = $CharacterIsActive ? '' : ' hidden';
+	$CharCards .= '<button type="button" class="character-card" data-class-id="'.Html($id).'" data-class-name="'.Html($Characters['ClassName'][$id]).'" data-active="'.$CharacterActiveAttr.'" data-name="'.Html($Characters['Name'][$id]).'" data-search="'.Html($CharacterSearchText).'" data-main-stat="'.Html($CharacterMainStat['Name']).'" data-main-value="'.Html($CharacterMainStat['Value']).'" data-str="'.Html($CharacterStats['STR']).'" data-agi="'.Html($CharacterStats['AGI']).'" data-dex="'.Html($CharacterStats['DEX']).'" data-hp="'.Html($CharacterStats['HP']).'" data-int="'.Html($CharacterStats['INT']).'" data-sen="'.Html($CharacterStats['SEN']).'" onclick="'.$CharacterCardOnclick.'"'.$CharacterHiddenAttr.'><span class="character-card-image"><img src="'.Html($Port).'" alt="'.Html($Characters['Name'][$id]).'"></span><span class="character-card-name">'.Html($Characters['Name'][$id]).'</span><span class="character-card-stat" style="display:none"></span></button>';
+	echo '<tr data-class-id="'.Html($id).'" data-class-name="'.Html($Characters['ClassName'][$id]).'" data-active="'.$CharacterActiveAttr.'" data-search="'.Html($CharacterSearchText).'" onclick="'.$CharacterBrowseOnclick.'"'.$CharacterHiddenAttr.'><td>'.$Characters['Name'][$id].'</td><td>'.$CharacterMainStat['Display'].'</td><td>'.$Characters['STR'][$id].'</td><td>'.$Characters['AGI'][$id].'</td><td>'.$Characters['DEX'][$id].'</td><td>'.$Characters['CON'][$id].'</td><td>'.$Characters['INT'][$id].'</td><td>'.$Characters['CHA'][$id].'</td><td>';
 	
 	
 	foreach ($NPCList['ClassID'] as $CurrentNPC){
