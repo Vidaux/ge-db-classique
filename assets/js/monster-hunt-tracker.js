@@ -2,9 +2,10 @@
 (function() {
   "use strict";
 
-  const COOKIE_NAME = "ge_classique_monster_hunt_v2";
-  const LEGACY_COOKIE_NAME = "ge_classique_monster_hunt_v1";
-  const FALLBACK_KEY = "ge_classique_monster_hunt_v2";
+  const COOKIE_NAME = "ge_classique_monster_hunt_v3";
+  const LEGACY_COOKIE_NAMES = ["ge_classique_monster_hunt_v2", "ge_classique_monster_hunt_v1"];
+  const FALLBACK_KEY = "ge_classique_monster_hunt_v3";
+  const LEGACY_FALLBACK_KEYS = ["ge_classique_monster_hunt_v2"];
   const COOKIE_MAX_AGE = 60 * 60 * 24 * 60;
   const SERVER_UTC_OFFSET_MINUTES = 0;
 
@@ -62,37 +63,22 @@
     }
   ];
 
-  const bosses = [];
-  const bossesById = {};
+  const tiersById = {};
 
   tiers.forEach(function(tier) {
-    tier.bosses.forEach(function(name) {
-      const boss = {
-        id: slug(name),
-        name: name,
-        tierId: tier.id,
-        tierLabel: tier.label,
-        min: tier.min,
-        max: tier.max
-      };
-      bosses.push(boss);
-      bossesById[boss.id] = boss;
-    });
+    tiersById[tier.id] = tier;
   });
 
   let state = { timers: {} };
   let cookieAvailable = true;
+  let selectedTierId = tiers[0] ? tiers[0].id : "";
 
   function byId(id) {
     return document.getElementById(id);
   }
 
-  function slug(value) {
-    return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "entry";
-  }
-
-  function timerKey(zoneIndex, bossId) {
-    return zoneIndex + "|" + bossId;
+  function timerKey(zoneIndex, tierId) {
+    return zoneIndex + "|" + tierId;
   }
 
   function normalize(value) {
@@ -107,10 +93,10 @@
     return -1;
   }
 
-  function findBoss(value) {
+  function findTier(value) {
     const requested = normalize(value);
-    for (let i = 0; i < bosses.length; i++) {
-      if (normalize(bosses[i].name) === requested) return bosses[i];
+    for (let i = 0; i < tiers.length; i++) {
+      if (normalize(tiers[i].label) === requested || normalize(tiers[i].id) === requested) return tiers[i];
     }
     return null;
   }
@@ -143,21 +129,56 @@
     return readCookie(name) === value;
   }
 
+  function tierIdFromLegacyTimer(timer) {
+    if (!timer || typeof timer !== "object") return "";
+    if (timer.tierId && tiersById[timer.tierId]) return timer.tierId;
+    if (timer.bossId) {
+      for (let i = 0; i < tiers.length; i++) {
+        if (tiers[i].bosses.some(function(name) { return normalize(name).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") === timer.bossId; })) {
+          return tiers[i].id;
+        }
+      }
+    }
+    return "";
+  }
+
+  function mergeTimer(timers, timer) {
+    const zoneIndex = Number(timer.zoneIndex);
+    const tierId = tierIdFromLegacyTimer(timer);
+    if (!Number.isFinite(zoneIndex) || zoneIndex < 0 || !zones[zoneIndex] || !tiersById[tierId]) return;
+    const key = timerKey(zoneIndex, tierId);
+    const existing = timers[key];
+    const killedAt = Number(timer.killedAt || 0);
+    if (!existing || killedAt > Number(existing.killedAt || 0)) {
+      timers[key] = {
+        zoneIndex: zoneIndex,
+        tierId: tierId,
+        killedAt: killedAt,
+        note: timer.note || ""
+      };
+    }
+  }
+
   function migrateLegacyEntries(legacyState) {
     const timers = {};
-    if (!legacyState || !legacyState.entries) return timers;
+    if (!legacyState || typeof legacyState !== "object") return timers;
+    if (legacyState.timers) {
+      Object.keys(legacyState.timers).forEach(function(key) {
+        mergeTimer(timers, legacyState.timers[key]);
+      });
+      return timers;
+    }
+    if (!legacyState.entries) return timers;
     Object.keys(legacyState.entries).forEach(function(key) {
       const parts = key.split("|");
       const zoneIndex = Number(parts[0]);
       const tierId = parts[1];
       const tier = tiers.find(function(item) { return item.id === tierId; });
       if (!tier || !Number.isFinite(zoneIndex)) return;
-      const fallbackBoss = bosses.find(function(boss) { return boss.tierId === tier.id; });
-      if (!fallbackBoss) return;
       const legacy = legacyState.entries[key] || {};
-      timers[timerKey(zoneIndex, fallbackBoss.id)] = {
+      timers[timerKey(zoneIndex, tier.id)] = {
         zoneIndex: zoneIndex,
-        bossId: fallbackBoss.id,
+        tierId: tier.id,
         killedAt: legacy.killedAt || 0,
         note: legacy.note || ""
       };
@@ -169,23 +190,35 @@
     const cookieValue = readCookie(COOKIE_NAME);
     const cookieState = cookieValue ? decodeState(cookieValue) : null;
     if (cookieState && typeof cookieState === "object") {
-      state = { timers: cookieState.timers || {} };
+      state = { timers: migrateLegacyEntries(cookieState) };
       return;
     }
 
-    const legacyCookie = readCookie(LEGACY_COOKIE_NAME);
-    const legacyState = legacyCookie ? decodeState(legacyCookie) : null;
-    const migratedTimers = migrateLegacyEntries(legacyState);
-    if (Object.keys(migratedTimers).length > 0) {
-      state = { timers: migratedTimers };
-      return;
+    for (let i = 0; i < LEGACY_COOKIE_NAMES.length; i++) {
+      const legacyCookie = readCookie(LEGACY_COOKIE_NAMES[i]);
+      const legacyState = legacyCookie ? decodeState(legacyCookie) : null;
+      const migratedTimers = migrateLegacyEntries(legacyState);
+      if (Object.keys(migratedTimers).length > 0) {
+        state = { timers: migratedTimers };
+        return;
+      }
     }
 
     try {
       const fallback = window.localStorage ? window.localStorage.getItem(FALLBACK_KEY) : "";
       const fallbackState = fallback ? JSON.parse(fallback) : null;
       if (fallbackState && typeof fallbackState === "object") {
-        state = { timers: fallbackState.timers || {} };
+        state = { timers: migrateLegacyEntries(fallbackState) };
+        return;
+      }
+      for (let i = 0; i < LEGACY_FALLBACK_KEYS.length; i++) {
+        const legacyFallback = window.localStorage ? window.localStorage.getItem(LEGACY_FALLBACK_KEYS[i]) : "";
+        const legacyFallbackState = legacyFallback ? JSON.parse(legacyFallback) : null;
+        const migratedTimers = migrateLegacyEntries(legacyFallbackState);
+        if (Object.keys(migratedTimers).length > 0) {
+          state = { timers: migratedTimers };
+          return;
+        }
       }
     } catch (error) {
       state = { timers: {} };
@@ -199,7 +232,7 @@
       if (timer.killedAt || timer.note) {
         compactTimers[key] = {
           zoneIndex: Number(timer.zoneIndex),
-          bossId: timer.bossId,
+          tierId: timer.tierId,
           killedAt: Number(timer.killedAt || 0),
           note: timer.note || ""
         };
@@ -323,15 +356,15 @@
   }
 
   function statusFor(timer) {
-    const boss = bossesById[timer.bossId];
+    const tier = tiersById[timer.tierId];
     const killedAt = Number(timer.killedAt || 0);
-    if (!boss || !killedAt) {
+    if (!tier || !killedAt) {
       return { className: "idle", text: "No kill logged", windowText: "" };
     }
 
     const now = Date.now();
-    const earliest = killedAt + boss.min * 60000;
-    const latest = killedAt + boss.max * 60000;
+    const earliest = killedAt + tier.min * 60000;
+    const latest = killedAt + tier.max * 60000;
     const windowText = formatClock(earliest) + " - " + formatClock(latest);
 
     if (now < earliest) {
@@ -358,13 +391,27 @@
   function renderZoneOptions() {
     const input = byId("huntZoneInput");
     if (!input) return;
-    input.value = zones[0] || "";
+    input.value = "";
   }
 
-  function renderBossOptions() {
-    const input = byId("huntBossInput");
-    if (!input) return;
-    input.value = bosses[0] ? bosses[0].name : "";
+  function renderTierOptions() {
+    const container = byId("huntTierButtons");
+    if (!container) return;
+    container.innerHTML = "";
+    tiers.forEach(function(tier) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "tier-button" + (tier.id === selectedTierId ? " is-selected" : "");
+      button.dataset.tierId = tier.id;
+      button.setAttribute("role", "radio");
+      button.setAttribute("aria-checked", tier.id === selectedTierId ? "true" : "false");
+      button.textContent = tier.label;
+      button.addEventListener("click", function() {
+        selectedTierId = tier.id;
+        renderTierOptions();
+      });
+      container.appendChild(button);
+    });
   }
 
   function renderSuggestionButtons(containerId, input, values) {
@@ -385,7 +432,6 @@
       button.addEventListener("click", function() {
         input.value = value;
         renderZoneSuggestions();
-        renderBossSuggestions();
       });
       container.appendChild(button);
     });
@@ -395,40 +441,35 @@
     renderSuggestionButtons("huntZoneSuggestions", byId("huntZoneInput"), zones);
   }
 
-  function renderBossSuggestions() {
-    renderSuggestionButtons("huntBossSuggestions", byId("huntBossInput"), bosses.map(function(boss) {
-      return boss.name;
-    }));
-  }
-
   function addOrUpdateTimer() {
     const zoneInput = byId("huntZoneInput");
-    const bossInput = byId("huntBossInput");
     const zoneIndex = findZoneIndex(zoneInput.value);
-    const boss = findBoss(bossInput.value);
+    const tier = findTier(selectedTierId);
     if (zoneIndex < 0) {
       window.alert("Choose a zone from the suggestion list.");
       zoneInput.focus();
       return;
     }
-    if (!boss) {
-      window.alert("Choose a boss from the suggestion list.");
-      bossInput.focus();
+    if (!tier) {
+      window.alert("Choose a tier.");
+      const firstTierButton = byId("huntTierButtons").querySelector("button");
+      if (firstTierButton) firstTierButton.focus();
       return;
     }
     const killedAt = readServerEntryTime() || Date.now();
-    const key = timerKey(zoneIndex, boss.id);
+    const key = timerKey(zoneIndex, tier.id);
     const existing = state.timers[key] || {};
 
     state.timers[key] = {
       zoneIndex: zoneIndex,
-      bossId: boss.id,
+      tierId: tier.id,
       killedAt: killedAt,
       note: existing.note || ""
     };
 
     zoneInput.value = zones[zoneIndex];
-    bossInput.value = boss.name;
+    selectedTierId = tier.id;
+    renderTierOptions();
     setServerEntryTime(killedAt);
     saveState();
     renderTimers();
@@ -438,16 +479,16 @@
     return Object.keys(state.timers).map(function(key) {
       return state.timers[key];
     }).filter(function(timer) {
-      return bossesById[timer.bossId] && zones[timer.zoneIndex];
+      return tiersById[timer.tierId] && zones[timer.zoneIndex];
     });
   }
 
   function spawnWindow(timer) {
-    const boss = bossesById[timer.bossId];
+    const tier = tiersById[timer.tierId];
     const killedAt = Number(timer.killedAt || 0);
-    if (!boss || !killedAt) return { earliest: 0, latest: 0, text: "" };
-    const earliest = killedAt + boss.min * 60000;
-    const latest = killedAt + boss.max * 60000;
+    if (!tier || !killedAt) return { earliest: 0, latest: 0, text: "" };
+    const earliest = killedAt + tier.min * 60000;
+    const latest = killedAt + tier.max * 60000;
     return {
       earliest: earliest,
       latest: latest,
@@ -466,9 +507,7 @@
 
   function sortedTrackedTimers() {
     return getTimers().sort(function(a, b) {
-      const bossA = bossesById[a.bossId];
-      const bossB = bossesById[b.bossId];
-      return [zones[a.zoneIndex], bossA.tierId, bossA.name].join("|").localeCompare([zones[b.zoneIndex], bossB.tierId, bossB.name].join("|"));
+      return [zones[a.zoneIndex], a.tierId].join("|").localeCompare([zones[b.zoneIndex], b.tierId].join("|"));
     });
   }
 
@@ -487,26 +526,26 @@
     if (empty) empty.hidden = timers.length !== 0;
 
     timers.forEach(function(timer) {
-      const boss = bossesById[timer.bossId];
+      const tier = tiersById[timer.tierId];
       const status = statusFor(timer);
       const window = spawnWindow(timer);
       const tr = document.createElement("tr");
-      const key = timerKey(timer.zoneIndex, timer.bossId);
+      const key = timerKey(timer.zoneIndex, timer.tierId);
       tr.dataset.timerKey = key;
 
       tr.innerHTML =
-        '<td class="boss-cell"></td>' +
+        '<td class="tier-cell"></td>' +
         '<td class="zone-cell"></td>' +
         '<td class="window-cell"></td>' +
         '<td class="status-cell"><span class="tracker-status"></span><small></small></td>';
 
-      tr.querySelector(".boss-cell").textContent = boss.name;
+      tr.querySelector(".tier-cell").textContent = tier.label;
       tr.querySelector(".zone-cell").textContent = zones[timer.zoneIndex];
       tr.querySelector(".window-cell").textContent = window.text;
       const badge = tr.querySelector(".tracker-status");
       badge.className = "tracker-status " + status.className;
       badge.textContent = status.text;
-      tr.querySelector(".status-cell small").textContent = boss.tierLabel + " / " + boss.min + "-" + boss.max + " min";
+      tr.querySelector(".status-cell small").textContent = tier.min + "-" + tier.max + " min";
 
       tbody.appendChild(tr);
     });
@@ -522,22 +561,22 @@
     if (empty) empty.hidden = timers.length !== 0;
 
     timers.forEach(function(timer) {
-      const boss = bossesById[timer.bossId];
+      const tier = tiersById[timer.tierId];
       const tr = document.createElement("tr");
-      const key = timerKey(timer.zoneIndex, timer.bossId);
+      const key = timerKey(timer.zoneIndex, timer.tierId);
       tr.dataset.timerKey = key;
 
       tr.innerHTML =
         '<td class="zone-cell"></td>' +
-        '<td class="boss-cell"></td>' +
+        '<td class="tier-cell"></td>' +
         '<td><input class="tracked-kill-date" type="date"></td>' +
         '<td><span class="time-entry table-time-entry"><input class="tracked-kill-hour" type="text" inputmode="numeric" maxlength="2" placeholder="19" aria-label="Kill hour"><span class="time-colon">:</span><input class="tracked-kill-minute" type="text" inputmode="numeric" maxlength="2" placeholder="09" aria-label="Kill minute"></span></td>' +
         '<td class="respawn-cell"></td>' +
         '<td class="tracker-actions"><button type="button" class="kill-now">Killed now</button><button type="button" class="clear-row">Clear</button></td>';
 
       tr.querySelector(".zone-cell").textContent = zones[timer.zoneIndex];
-      tr.querySelector(".boss-cell").textContent = boss.name;
-      tr.querySelector(".respawn-cell").textContent = boss.min + "-" + boss.max + " min";
+      tr.querySelector(".tier-cell").textContent = tier.label;
+      tr.querySelector(".respawn-cell").textContent = tier.min + "-" + tier.max + " min";
 
       const parts = toServerParts(timer.killedAt || 0);
       const dateInput = tr.querySelector(".tracked-kill-date");
@@ -610,13 +649,11 @@
   function init() {
     loadState();
     renderZoneOptions();
-    renderBossOptions();
+    renderTierOptions();
     setServerEntryTime(Date.now());
     bindTimePartInputs(byId("huntServerHour"), byId("huntServerMinute"));
     renderZoneSuggestions();
-    renderBossSuggestions();
     byId("huntZoneInput").addEventListener("input", renderZoneSuggestions);
-    byId("huntBossInput").addEventListener("input", renderBossSuggestions);
     byId("huntServerNow").addEventListener("click", function() {
       setServerEntryTime(Date.now());
     });

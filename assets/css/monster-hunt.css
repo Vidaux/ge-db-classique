@@ -101,6 +101,24 @@
   margin-bottom: 12px;
 }
 
+.tier-field {
+  margin-bottom: 12px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tier-button-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
 .quick-suggestions {
   display: flex;
   flex-wrap: wrap;
@@ -193,7 +211,29 @@
   font-weight: 650;
 }
 
+.tier-button-group .tier-button {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 8px;
+  border-color: rgba(255, 253, 248, 0.16);
+  background: rgba(255, 253, 248, 0.08);
+  color: var(--ink, #e8ddbf);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tier-button-group .tier-button.is-selected {
+  border-color: rgba(242, 216, 140, 0.86);
+  background: linear-gradient(180deg, rgba(111, 82, 36, 0.98), rgba(54, 39, 20, 0.98));
+  color: #fff7df;
+}
+
 .quick-suggestions .suggestion-button:hover {
+  border-color: rgba(242, 216, 140, 0.56);
+  background: rgba(242, 216, 140, 0.16);
+}
+
+.tier-button-group .tier-button:hover {
   border-color: rgba(242, 216, 140, 0.56);
   background: rgba(242, 216, 140, 0.16);
 }
@@ -265,7 +305,7 @@
   text-align: left;
 }
 
-.monster-hunt-table .boss-cell {
+.monster-hunt-table .tier-cell {
   max-width: 260px;
 }
 

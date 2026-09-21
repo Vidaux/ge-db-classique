@@ -1835,13 +1835,14 @@ function CharacterAvailabilityJsonPath() {
 	return WebOutputPath('assets/data/character-availability.json');
 }
 
-function WriteCharacterAvailabilityJson() {
+function LoadCharacterAvailabilityJson() {
 	global $Characters, $CharacterAvailabilityByClassId;
 
-	$characters = array();
 	$CharacterAvailabilityByClassId = array();
-	$defaultActiveClassIds = array(1, 2, 3, 4, 5);
+	// This file is intentionally manual. The generator reads it for filtering,
+	// but must not rewrite, sort, add, or remove entries.
 	$existing = ReadJsonFile(CharacterAvailabilityJsonPath(), array('defaultActive' => false, 'characters' => array()));
+	$defaultActive = !empty($existing['defaultActive']);
 	$existingByClassId = array();
 	$existingByClassName = array();
 	$existingByName = array();
@@ -1875,26 +1876,11 @@ function WriteCharacterAvailabilityJson() {
 			} elseif ($name !== '' && array_key_exists($name, $existingByName)) {
 				$active = $existingByName[$name];
 			} else {
-				$active = in_array($classId, $defaultActiveClassIds, true);
+				$active = $defaultActive;
 			}
 			$CharacterAvailabilityByClassId[$classId] = $active;
-			$characters[] = array(
-				'classId' => $classId,
-				'className' => $className,
-				'name' => $name,
-				'active' => $active,
-			);
 		}
 	}
-
-	usort($characters, function($a, $b) {
-		return $a['classId'] <=> $b['classId'];
-	});
-
-	WriteJsonFile(CharacterAvailabilityJsonPath(), array(
-		'defaultActive' => false,
-		'characters' => $characters,
-	));
 }
 
 function ValidStanceId($stanceId) {
@@ -3173,7 +3159,7 @@ ResolveDictionaryRefsInArray($Items);
 ApplyCommonNameFallbacks($Items);
 SaXtAGe("xml/datatable_job.xml", 'Characters');
 ApplyCharacterNameFallbacks();
-WriteCharacterAvailabilityJson();
+LoadCharacterAvailabilityJson();
 SaXtAGe("xml/datatable_stance.xml", 'Stances');
 SaXtAGe("xml/datatable_stancecondition.xml", 'StanceConds');
 SaXtAGe("xml/datatable_skill.xml", 'Skill');

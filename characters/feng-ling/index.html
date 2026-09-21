@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Granado Espada - Classique Database</title>
+	
+<script src="../../assets/js/game-data.js" defer></script>
+
+
+
+	
+<script src="../../assets/js/app.js" defer></script>
+
+	
+
+<link rel="stylesheet" href="../../assets/css/site.css">
+
+</head>
+<body data-page="characters"><div id="mySidenav" class="sidenav"><a id="closebtn" href="#" class="closebtn" onclick="closeNav();return false;" aria-label="Close navigation">&times;</a></div><div id="main"><a href="../../index.html">Home</a><a href="../../changelog.html">Changelog</a><a class="is-active" href="../../characters/">Characters</a><a href="../../achievements/">Achievements</a><a href="../../maps/">Maps</a><a href="../../monsters/">Bosses</a><a href="../../monster-hunt/">Monster Hunt</a><a href="../../weapons/">Weapons</a><a href="../../armor/">Armor</a><a href="../../accessories/">Accessories</a><a href="../../medals/">Medals</a><a href="../../enchant-chips/">Enchant Chips</a><div id="lastModified">Last modified: 2026-09-21 15:35:49 EDT</div></div><div id="MainContainer"><div id="Character" class="character-page"><div id="CharacterDetailView" class="character-detail-view standalone">
+<div class="character-detail-toolbar"><a class="character-back-button" href="../../characters/">Back to Gallery</a></div>
+<div id="CharacterDetails" class="grid-container">
+
+<div class="gecharinfo"><div class="gechar1"><h3 class="geh3" id="CName"></h3><span class="charportrait1"><img src="../../images/Barrack/Fighter_f_barrack_on.bmp" id="chp" alt="Portrait"></span>
+<br>
+<table>
+	<tr><td class="statpoints" >STR</td> <td class="statpoints" id="STR"></td></tr>
+<tr><td class="statpoints" >AGI</td> <td class="statpoints" id="AGI"></td></tr>
+<tr><td class="statpoints" >HP</td> <td class="statpoints" id="CON"></td></tr>
+	<tr><td class="statpoints" >DEX</td> <td class="statpoints" id="DEX"></td></tr>
+<tr><td class="statpoints" >INT</td> <td class="statpoints" id="INT"></td></tr>
+	<tr><td class="statpoints" >SEN</td> <td class="statpoints" id="SEN"></td></tr>
+	</table>
+<br>
+Initial Lv.: <span id="initLv"></span></div>
+<div class="w254" ><p id="CharBio"></p>
+<p><strong>Character Buff:</strong><span id="ChaBuff"></span></p>
+<p><strong>Armor Types:</strong> <span id="Armors"></span></p>
+<br>
+Expedition Tags: <span id="ExpTags"> </span><br>
+<br>
+</div>
+</div>
+<div class="geskill"><h5 class="geskillinfo"><span class="cntimg"><img id="JobSkillImg" src="../../images/Skills/job_provoke.bmp" alt="Job Skill"></span><br>
+	<span id="JobSkillName"></span></h5>
+
+<p><strong>Targets:</strong> <span id="JobSkillTargets"></span></p>
+<p>Cast Time: <span id="JobSkillCastTime">0</span><br>
+Cooldown: <span id="JobSkillCooldown"></span><br>
+Animation:<span id="JobSkillAnimDuration"></span><br>
+Cost: <span id="JobSkillConsume"></span>
+</p>
+<div id="JobSkillDescs">
+<p><strong>Lv. 1</strong></p><br>
+<p id="JobskillLv1"></p>
+<p><strong>Lv. 10</strong></p><br>
+<p id="JobskillLv10"></p>
+<p><strong>Lv. 11</strong></p><br>
+<p id="JobskillLv11"></p>
+<p><strong>Lv. 12</strong></p><br>
+<p id="JobskillLv12"></p>
+	</div>
+	</div>
+	<div id="StanceConditions">
+	</div>
+
+
+	<div class="Stances" id="Stances"></div>	</div></div><script>document.addEventListener("DOMContentLoaded",function(){DrawStances();changepage('Feng Ling',60, 80, 50, 50, 30, 30,'The daughter of the Chief of the Royal Guards is a trained professional in the martial arts of Dang and uses different stances.', '[Gigante][East][Fighter]', 'None *1', '../../images/Barrack/Soso_f_barrack_on.bmp', `<img src="../../images/Misc/leather.jpg" alt="Leather armor">`, 1, `Soul of Ice`, `job_icespirits.bmp`, `Self-buff`, `30 sec.`, `0 sec.` ,`2.57 sec.`, `300 SP;Mithridart x5;`, `<p>Lv.1</p><p id='JobSkillDesc1'>Duration: 66 sec<br>Ice ATK: +35<br>Ice RES: +1<br>Evasion: +6<br>DEF: -6<br>6% chance to [Freeze] enemy</p><br><p>Lv.10</p><p id='JobSkillDesc10'>Duration: 120 sec<br>Ice ATK: +125<br>Ice RES: +10<br>Evasion: +15<br>DEF: -15<br>15% chance to [Freeze] enemy</p><p>Lv.11</p><p id='JobSkillDesc11'>Duration: 126 sec<br>Ice ATK: +135<br>Ice RES: +11<br>Evasion: +16<br>DEF: -16<br>16% chance to [Freeze] enemy<br>A.R.: +1</p><p>Lv.12</p><p id='JobSkillDesc12'>Duration: 132 sec<br>Ice ATK: +145<br>Ice RES: +12<br>Evasion: +17<br>DEF: -17<br>17% chance to [Freeze] enemy<br>A.R.: +1</p>`, dth()+dtrow(`None`,`None`,`[Bare Knuckle]`)+dtrow(`Knuckle`,`None`,`[Martial Arts Book-Chap. of Ice][Martial Arts Book-Chap. of Earth]`)+dtrow(`Leguard`,`None`,`[Martial Arts Book-Chap. of Ice][Martial Arts Book-Chap. of Wind]`)+dtrow(`Knuckle`,`Leguard`,`[Martial Arts Book-Chap. of Earth][Martial Arts Book-Chap. of Wind][Martial Arts Book-Chap. of Ice][Martial Arts Compendium]`)+`</table>`,WriteStance10010()+WriteStance10050()+WriteStance10020()+WriteStance10030()+WriteStance10070()+'');});</script></div></div></body></html>
