@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monster Hunt Event - Granado Espada Classique Database</title>
+
+<script src="../assets/js/monster-hunt-tracker.js" defer></script>
+
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/monster-hunt.css">
+
+</head>
+<body data-page="monster-hunt"><div id="mySidenav" class="sidenav"><a id="closebtn" href="#" class="closebtn" onclick="closeNav();return false;" aria-label="Close navigation">&times;</a></div><div id="main"><a href="../index.html">Home</a><a href="../changelog.html">Changelog</a><a href="../characters/">Characters</a><a href="../achievements/">Achievements</a><a href="../maps/">Maps</a><a href="../monsters/">Bosses</a><a class="is-active" href="../monster-hunt/">Monster Hunt</a><a href="../weapons/">Weapons</a><a href="../armor/">Armor</a><a href="../accessories/">Accessories</a><a href="../medals/">Medals</a><a href="../enchant-chips/">Enchant Chips</a></div><div id="MainContainer"><div id="MonsterHunt"><section class="monster-hunt-page">
+<div class="monster-hunt-hero">
+<h1>Monster Hunt Event</h1>
+<p>Cruise and the Bounty Hunters Association need pioneers to track special event bosses across the New World. Boss timer entries are stored in this browser only.</p>
+</div>
+
+<dl class="event-summary">
+<div><dt>Event Dates</dt><dd>September 15 - September 29</dd></div>
+<div><dt>Spawn Rule</dt><dd>1 boss per type per map</dd></div>
+<div><dt>Tracked Zones</dt><dd>20</dd></div>
+<div><dt>Boss Types</dt><dd>4</dd></div>
+</dl>
+
+<div class="monster-hunt-tracker-layout">
+<section class="kill-entry-panel" aria-labelledby="killEntryHeading">
+<h2 id="killEntryHeading">Kill Entry</h2>
+<label class="combo-field">Zone<input type="text" id="huntZoneInput" autocomplete="off" placeholder="Type a zone"><span id="huntZoneSuggestions" class="quick-suggestions"></span></label>
+<label class="combo-field">Boss<input type="text" id="huntBossInput" autocomplete="off" placeholder="Type a boss"><span id="huntBossSuggestions" class="quick-suggestions"></span></label>
+<div class="server-time-fields">
+<label>Server Date<input type="date" id="huntServerDate"></label>
+<label>HH<input type="text" id="huntServerHour" inputmode="numeric" maxlength="2" placeholder="19" aria-label="Server hour"></label>
+<span class="time-colon entry-time-colon">:</span>
+<label>MM<input type="text" id="huntServerMinute" inputmode="numeric" maxlength="2" placeholder="09" aria-label="Server minute"></label>
+<button type="button" id="huntServerNow" class="time-now-button">Now</button>
+</div>
+<button type="button" id="addHuntTimer">Add Kill</button>
+<div id="storageStatus" class="tracker-storage"></div>
+<button type="button" id="clearAllTracker" class="clear-tracker">Clear All</button>
+</section>
+
+<section class="spawn-board" aria-label="Tracked Monster Hunt bosses">
+<div class="spawn-panel">
+<h2>Upcoming Spawns</h2>
+<p id="emptyUpcoming" class="empty-tracker">No upcoming spawns tracked.</p>
+<div class="tracker-table-wrap">
+<table class="monster-hunt-table upcoming-table">
+<thead><tr><th>Boss</th><th>Zone</th><th>Window</th><th>Status</th></tr></thead>
+<tbody id="upcomingRows"></tbody>
+</table>
+</div>
+</div>
+
+<div class="spawn-panel">
+<h2>Tracked Bosses</h2>
+<p id="emptyTracked" class="empty-tracker">No tracked bosses yet.</p>
+<div class="tracker-table-wrap">
+<table class="monster-hunt-table tracked-table">
+<thead><tr><th>Zone</th><th>Boss</th><th>Kill Date</th><th>Kill Time</th><th>Respawn</th><th>Actions</th></tr></thead>
+<tbody id="trackedRows"></tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+</section></div></div></body></html>

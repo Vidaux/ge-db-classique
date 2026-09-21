@@ -35,55 +35,55 @@
             "classId": 6,
             "className": "Grace",
             "name": "Bernelli",
-            "active": true
+            "active": false
         },
         {
             "classId": 7,
             "className": "Idge",
             "name": "Idge Imbrulia",
-            "active": true
+            "active": false
         },
         {
             "classId": 8,
             "className": "Claude",
             "name": "Claude",
-            "active": true
+            "active": false
         },
         {
             "classId": 9,
             "className": "Brunie",
             "name": "Brunie",
-            "active": true
+            "active": false
         },
         {
             "classId": 10,
             "className": "Soldier",
             "name": "Soldier of Reboldoeux",
-            "active": true
+            "active": false
         },
         {
             "classId": 11,
             "className": "Ramiro",
             "name": "Ramiro",
-            "active": true
+            "active": false
         },
         {
             "classId": 12,
             "className": "Tiburon",
             "name": "Tiburon",
-            "active": true
+            "active": false
         },
         {
             "classId": 13,
             "className": "Jack",
             "name": "Jack",
-            "active": true
+            "active": false
         },
         {
             "classId": 14,
             "className": "Yeganeh",
             "name": "Diego",
-            "active": true
+            "active": false
         },
         {
             "classId": 15,
@@ -95,169 +95,169 @@
             "classId": 16,
             "className": "Andre",
             "name": "Andre",
-            "active": true
+            "active": false
         },
         {
             "classId": 17,
             "className": "Panfilo",
             "name": "Panfilo de Narvaez",
-            "active": true
+            "active": false
         },
         {
             "classId": 18,
             "className": "Jose",
             "name": "Jose Corthasar",
-            "active": true
+            "active": false
         },
         {
             "classId": 19,
             "className": "Adelina",
             "name": "Adelina Esperanza",
-            "active": true
+            "active": false
         },
         {
             "classId": 20,
             "className": "MBoma",
             "name": "MBoma",
-            "active": true
+            "active": false
         },
         {
             "classId": 21,
             "className": "Soho",
             "name": "Soho",
-            "active": true
+            "active": false
         },
         {
             "classId": 22,
             "className": "Alejandro",
             "name": "Alejandro",
-            "active": true
+            "active": false
         },
         {
             "classId": 23,
             "className": "Lisa",
             "name": "Lisa Lynway",
-            "active": true
+            "active": false
         },
         {
             "classId": 24,
             "className": "Emilia",
             "name": "Emilia Guliano",
-            "active": true
+            "active": false
         },
         {
             "classId": 25,
             "className": "Sharif",
             "name": "Najib Sharif",
-            "active": true
+            "active": false
         },
         {
             "classId": 26,
             "className": "Lorch",
             "name": "Lorch",
-            "active": true
+            "active": false
         },
         {
             "classId": 27,
             "className": "Gurtrude",
             "name": "Grutrude",
-            "active": true
+            "active": false
         },
         {
             "classId": 28,
             "className": "RescueKnight",
             "name": "Rescue Knight",
-            "active": true
+            "active": false
         },
         {
             "classId": 29,
             "className": "Karjalainen",
             "name": "Karjalainen",
-            "active": true
+            "active": false
         },
         {
             "classId": 30,
             "className": "Gracielo",
             "name": "Gracielo",
-            "active": true
+            "active": false
         },
         {
             "classId": 31,
             "className": "Trooper",
             "name": "Coimbra Trooper",
-            "active": true
+            "active": false
         },
         {
             "classId": 32,
             "className": "Grandma",
             "name": "Grandma",
-            "active": true
+            "active": false
         },
         {
             "classId": 33,
             "className": "Romina",
             "name": "Romina",
-            "active": true
+            "active": false
         },
         {
             "classId": 34,
             "className": "CatherineSTR",
             "name": "Catherine (STR)",
-            "active": true
+            "active": false
         },
         {
             "classId": 35,
             "className": "CatherineDEX",
             "name": "Catherine (DEX)",
-            "active": true
+            "active": false
         },
         {
             "classId": 36,
             "className": "CatherineINT",
             "name": "Catherine (INT)",
-            "active": true
+            "active": false
         },
         {
             "classId": 37,
             "className": "CatherineREAL",
             "name": "Catherine",
-            "active": true
+            "active": false
         },
         {
             "classId": 38,
             "className": "PanfiloBattle",
             "name": "Battle Cook Panfilo",
-            "active": true
+            "active": false
         },
         {
             "classId": 39,
             "className": "AdelinaPirate",
             "name": "Pirate Adelina",
-            "active": true
+            "active": false
         },
         {
             "classId": 40,
             "className": "SohoFighter",
             "name": "Soho The Wind",
-            "active": true
+            "active": false
         },
         {
             "classId": 41,
             "className": "EmiliaSage",
             "name": "Sage Emilia",
-            "active": true
+            "active": false
         },
         {
             "classId": 42,
             "className": "IdgeBattle",
             "name": "Battle Smith Idge",
-            "active": true
+            "active": false
         },
         {
             "classId": 43,
             "className": "Selva",
             "name": "Selva",
-            "active": true
+            "active": false
         },
         {
             "classId": 44,
@@ -269,7 +269,7 @@
             "classId": 45,
             "className": "Infantry",
             "name": "City of Auch Infantry",
-            "active": true
+            "active": false
         },
         {
             "classId": 46,
@@ -281,19 +281,19 @@
             "classId": 47,
             "className": "Viki",
             "name": "Viki",
-            "active": true
+            "active": false
         },
         {
             "classId": 48,
             "className": "Muathai",
             "name": "Irawan",
-            "active": true
+            "active": false
         },
         {
             "classId": 49,
             "className": "Angie",
             "name": "Angie",
-            "active": true
+            "active": false
         },
         {
             "classId": 50,
@@ -305,91 +305,91 @@
             "classId": 51,
             "className": "Dietrich",
             "name": "Kurt",
-            "active": true
+            "active": false
         },
         {
             "classId": 52,
             "className": "Eduardo",
             "name": "Edward",
-            "active": true
+            "active": false
         },
         {
             "classId": 53,
             "className": "Garcia",
             "name": "Garcia",
-            "active": true
+            "active": false
         },
         {
             "classId": 54,
             "className": "Soso",
             "name": "Feng Ling",
-            "active": true
+            "active": false
         },
         {
             "classId": 55,
             "className": "Rio",
             "name": "Rio",
-            "active": true
+            "active": false
         },
         {
             "classId": 56,
             "className": "Backho",
             "name": "White Tiger",
-            "active": true
+            "active": false
         },
         {
             "classId": 57,
             "className": "Calyce",
             "name": "Calypso",
-            "active": true
+            "active": false
         },
         {
             "classId": 58,
             "className": "Clair",
             "name": "Claire",
-            "active": true
+            "active": false
         },
         {
             "classId": 59,
             "className": "Nar",
             "name": "Nar",
-            "active": true
+            "active": false
         },
         {
             "classId": 60,
             "className": "Ania",
             "name": "Ania",
-            "active": true
+            "active": false
         },
         {
             "classId": 61,
             "className": "Hellena",
             "name": "Hellena",
-            "active": true
+            "active": false
         },
         {
             "classId": 62,
             "className": "Mifuyu",
             "name": "Mifuyu",
-            "active": true
+            "active": false
         },
         {
             "classId": 63,
             "className": "EmiliaLunatic",
             "name": "Reckless Emilia",
-            "active": true
+            "active": false
         },
         {
             "classId": 64,
             "className": "Asoka",
             "name": "Asoka",
-            "active": true
+            "active": false
         },
         {
             "classId": 65,
             "className": "CatherineTorsche",
             "name": "Catherine Torsche",
-            "active": true
+            "active": false
         },
         {
             "classId": 66,

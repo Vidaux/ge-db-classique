@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Granado Espada - Classique Database</title>
+	
+<script src="../assets/js/game-data.js" defer></script>
+
+
+
+	
+<script src="../assets/js/app.js" defer></script>
+
+	
+
+<link rel="stylesheet" href="../assets/css/site.css">
+
+</head>
+<body data-page="characters"><div id="mySidenav" class="sidenav"><a id="closebtn" href="#" class="closebtn" onclick="closeNav();return false;" aria-label="Close navigation">&times;</a></div><div id="main"><a href="../index.html">Home</a><a href="../changelog.html">Changelog</a><a class="is-active" href="../characters/">Characters</a><a href="../achievements/">Achievements</a><a href="../maps/">Maps</a><a href="../monsters/">Bosses</a><a href="../monster-hunt/">Monster Hunt</a><a href="../weapons/">Weapons</a><a href="../armor/">Armor</a><a href="../accessories/">Accessories</a><a href="../medals/">Medals</a><a href="../enchant-chips/">Enchant Chips</a><div id="lastModified">Last modified: 2026-09-21 14:55:54 EDT</div></div><div id="MainContainer"><div id="Character">
+<div id="CharacterListView">
+<section class="character-directory">
+	<div class="character-directory-head">
+		<h2>Characters</h2>
+		<div class="character-filterbar">
+			<label class="visually-hidden" for="myInput">Search characters</label>
+			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by name, weapon, or stance">
+			<label class="visually-hidden" for="characterSort">Sort characters</label>
+			<select id="characterSort" onchange="SortCharacters(this.value)">
+				<option value="name">Name</option>
+				<option value="main">Main Stat</option>
+				<option value="stat:str">STR</option>
+				<option value="stat:agi">AGI</option>
+				<option value="stat:dex">DEX</option>
+				<option value="stat:hp">HP</option>
+				<option value="stat:int">INT</option>
+				<option value="stat:sen">SEN</option>
+			</select>
+		</div>
+		<div class="character-tabs">
+			<button type="button" class="character-tab is-active" data-target="CharacterCardsPanel" onclick="SelectCharacterTab(this,'CharacterCardsPanel')">Gallery</button>
+			<button type="button" class="character-tab" data-target="CharacterBrowsePanel" onclick="SelectCharacterTab(this,'CharacterBrowsePanel')">Browse</button>
+		</div>
+	</div>
+	<div id="CharacterDirectory">
+		<div id="CharacterCardsPanel">
+			<div id="CharacterCards" class="character-card-grid"><a class="character-card" href="../characters/fighter/" data-class-id="1" data-class-name="Fighter" data-active="true" data-name="Fighter" data-search="Fighter Fighter Provoke Sword Shield Pistol Rapier Sabre THSword Polearm Dagger Blunt Javelin Bare Knuckle Back-Guard Equites High-Guard Hack and Slash Heaven or Hell Epee Garde Sabre Garde Middle-Guard Low-Guard Plow-Guard Roof-Guard Sidewinder Hanging Guard Blandir Cruz Mighty Cruz Escrima Freestyle Shot Double-Gun Shot Advance Garde Defender Stave Guard" data-main-stat="STR" data-main-value="60" data-str="60" data-agi="60" data-dex="60" data-hp="60" data-int="30" data-sen="30"><span class="character-card-image"><img src="../images/Barrack/Fighter_f_barrack_on.bmp" alt="Fighter"></span><span class="character-card-name">Fighter</span><span class="character-card-stat" style="display:none"></span></a><a class="character-card" href="../characters/wizard/" data-class-id="2" data-class-name="Wizard" data-active="true" data-name="Wizard" data-search="Wizard Wizard Energy Shield Staff Rod Psychokinesis Illusionist Levitation Anathema Darkness ESP Incantation" data-main-stat="INT" data-main-value="70" data-str="30" data-agi="50" data-dex="40" data-hp="40" data-int="70" data-sen="70"><span class="character-card-image"><img src="../images/Barrack/Wizard_f_barrack_on.bmp" alt="Wizard"></span><span class="character-card-name">Wizard</span><span class="character-card-stat" style="display:none"></span></a><a class="character-card" href="../characters/scout/" data-class-id="3" data-class-name="Scout" data-active="true" data-name="Scout" data-search="Scout Scout Healing Dagger Rosario First Aid Fortitudo Install Trap Tactical Assistance Escrima Arnis Dobalada corte" data-main-stat="AGI" data-main-value="70" data-str="30" data-agi="70" data-dex="70" data-hp="50" data-int="50" data-sen="30"><span class="character-card-image"><img src="../images/Barrack/Scout_f_barrack_on.bmp" alt="Scout"></span><span class="character-card-name">Scout</span><span class="character-card-stat" style="display:none"></span></a><a class="character-card" href="../characters/musketeer/" data-class-id="4" data-class-name="Musketeer" data-active="true" data-name="Musketeer" data-search="Musketeer Musketeer Concentration Pistol Rifle Bayonet Bare Knuckle Aiming Shot Freestyle Shot Sight Shot Double-Gun Shot Outrage Shot Standing Shot Kneeling Shot Flintlock Encounter shot" data-main-stat="DEX" data-main-value="80" data-str="50" data-agi="60" data-dex="80" data-hp="50" data-int="30" data-sen="30"><span class="character-card-image"><img src="../images/Barrack/Musketeer_f_barrack_on.bmp" alt="Musketeer"></span><span class="character-card-name">Musketeer</span><span class="character-card-stat" style="display:none"></span></a><a class="character-card" href="../characters/warlock/" data-class-id="5" data-class-name="Warlock" data-active="true" data-name="Warlock" data-search="Warlock Warlock Elemental Penetration FireBrc IceBrc LghtBrc BoneBrc ElemBrc Possession Fire Possession Ice Possession Lightning Evocation Fire Domination Fire Evocation Ice Domination Ice Evocation Lightning Domination Lightning Elemental Lord" data-main-stat="INT" data-main-value="80" data-str="30" data-agi="30" data-dex="50" data-hp="40" data-int="80" data-sen="70"><span class="character-card-image"><img src="../images/Barrack/Warlock_f_barrack_on.bmp" alt="Warlock"></span><span class="character-card-name">Warlock</span><span class="character-card-stat" style="display:none"></span></a></div>
+		</div>
+		<div id="CharacterBrowsePanel" style="display:none">
+			<div class="character-browse-table">
+				<table class="CharTable" id="MyTable">
+					<thead>
+						<tr><th><a href="#" onclick="SortTable(0,'T');return false;">Name</a></th><th><a href="#" onclick="SortTable(1,'T');return false;">Main Stat</a></th><th><a href="#" onclick="SortTable(2,'N');return false;">STR</a></th><th><a href="#" onclick="SortTable(3,'N');return false;">AGI</a></th><th><a href="#" onclick="SortTable(4,'N');return false;">DEX</a></th><th><a href="#" onclick="SortTable(5,'N');return false;">HP</a></th><th><a href="#" onclick="SortTable(6,'N');return false;">INT</a></th><th><a href="#" onclick="SortTable(7,'N');return false;">SEN</a></th><th><a href="#" onclick="SortTable(8,'T');return false;">Recruit</a></th></tr>
+					</thead>
+					<tbody>
+						<tr data-class-id="1" data-class-name="Fighter" data-active="true" data-search="Fighter Fighter Provoke Sword Shield Pistol Rapier Sabre THSword Polearm Dagger Blunt Javelin Bare Knuckle Back-Guard Equites High-Guard Hack and Slash Heaven or Hell Epee Garde Sabre Garde Middle-Guard Low-Guard Plow-Guard Roof-Guard Sidewinder Hanging Guard Blandir Cruz Mighty Cruz Escrima Freestyle Shot Double-Gun Shot Advance Garde Defender Stave Guard"><td><a href="../characters/fighter/">Fighter</a></td><td>STR 60</td><td>60</td><td>60</td><td>60</td><td>60</td><td>30</td><td>30</td><td>Normal</td></tr>
+<tr data-class-id="2" data-class-name="Wizard" data-active="true" data-search="Wizard Wizard Energy Shield Staff Rod Psychokinesis Illusionist Levitation Anathema Darkness ESP Incantation"><td><a href="../characters/wizard/">Wizard</a></td><td>INT 70</td><td>30</td><td>50</td><td>40</td><td>40</td><td>70</td><td>70</td><td>Normal</td></tr>
+<tr data-class-id="3" data-class-name="Scout" data-active="true" data-search="Scout Scout Healing Dagger Rosario First Aid Fortitudo Install Trap Tactical Assistance Escrima Arnis Dobalada corte"><td><a href="../characters/scout/">Scout</a></td><td>AGI 70</td><td>30</td><td>70</td><td>70</td><td>50</td><td>50</td><td>30</td><td>Normal</td></tr>
+<tr data-class-id="4" data-class-name="Musketeer" data-active="true" data-search="Musketeer Musketeer Concentration Pistol Rifle Bayonet Bare Knuckle Aiming Shot Freestyle Shot Sight Shot Double-Gun Shot Outrage Shot Standing Shot Kneeling Shot Flintlock Encounter shot"><td><a href="../characters/musketeer/">Musketeer</a></td><td>DEX 80</td><td>50</td><td>60</td><td>80</td><td>50</td><td>30</td><td>30</td><td>Normal</td></tr>
+<tr data-class-id="5" data-class-name="Warlock" data-active="true" data-search="Warlock Warlock Elemental Penetration FireBrc IceBrc LghtBrc BoneBrc ElemBrc Possession Fire Possession Ice Possession Lightning Evocation Fire Domination Fire Evocation Ice Domination Ice Evocation Lightning Domination Lightning Elemental Lord"><td><a href="../characters/warlock/">Warlock</a></td><td>INT 80</td><td>30</td><td>30</td><td>50</td><td>40</td><td>80</td><td>70</td><td>Normal</td></tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
+	</div>
+<div id="CharacterDetailView" style="display:none">
+<div class="character-detail-toolbar"><button type="button" id="CharacterBackButton" class="character-back-button" onclick="BackToCharacterList()">Back to Gallery</button></div>
+<div id="CharacterDetails" class="grid-container">
+
+<div class="gecharinfo"><div class="gechar1"><h3 class="geh3" id="CName"></h3><span class="charportrait1"><img src="../images/Barrack/Fighter_f_barrack_on.bmp" id="chp" alt="Portrait"></span>
+<br>
+<table>
+	<tr><td class="statpoints" >STR</td> <td class="statpoints" id="STR"></td></tr>
+<tr><td class="statpoints" >AGI</td> <td class="statpoints" id="AGI"></td></tr>
+<tr><td class="statpoints" >HP</td> <td class="statpoints" id="CON"></td></tr>
+	<tr><td class="statpoints" >DEX</td> <td class="statpoints" id="DEX"></td></tr>
+<tr><td class="statpoints" >INT</td> <td class="statpoints" id="INT"></td></tr>
+	<tr><td class="statpoints" >SEN</td> <td class="statpoints" id="SEN"></td></tr>
+	</table>
+<br>
+Initial Lv.: <span id="initLv"></span></div>
+<div class="w254" ><p id="CharBio"></p>
+<p><strong>Character Buff:</strong><span id="ChaBuff"></span></p>
+<p><strong>Armor Types:</strong> <span id="Armors"></span></p>
+<br>
+Expedition Tags: <span id="ExpTags"> </span><br>
+<br>
+</div>
+</div>
+<div class="geskill"><h5 class="geskillinfo"><span class="cntimg"><img id="JobSkillImg" src="../images/Skills/job_provoke.bmp" alt="Job Skill"></span><br>
+	<span id="JobSkillName"></span></h5>
+
+<p><strong>Targets:</strong> <span id="JobSkillTargets"></span></p>
+<p>Cast Time: <span id="JobSkillCastTime">0</span><br>
+Cooldown: <span id="JobSkillCooldown"></span><br>
+Animation:<span id="JobSkillAnimDuration"></span><br>
+Cost: <span id="JobSkillConsume"></span>
+</p>
+<div id="JobSkillDescs">
+<p><strong>Lv. 1</strong></p><br>
+<p id="JobskillLv1"></p>
+<p><strong>Lv. 10</strong></p><br>
+<p id="JobskillLv10"></p>
+<p><strong>Lv. 11</strong></p><br>
+<p id="JobskillLv11"></p>
+<p><strong>Lv. 12</strong></p><br>
+<p id="JobskillLv12"></p>
+	</div>
+	</div>
+	<div id="StanceConditions">
+	</div>
+
+
+	<div class="Stances" id="Stances"></div>	</div></div></div></div></body></html>

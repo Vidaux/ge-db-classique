@@ -1,0 +1,326 @@
+/* Standalone Monster Hunt tracker styles. */
+.monster-hunt-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.monster-hunt-hero {
+  padding: 18px 0 14px;
+  border-bottom: 1px solid rgba(205, 188, 150, 0.35);
+}
+
+.monster-hunt-hero h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+.monster-hunt-hero p {
+  max-width: 920px;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.event-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.event-summary div {
+  border: 1px solid rgba(205, 188, 150, 0.35);
+  background: rgba(20, 20, 20, 0.32);
+  padding: 10px;
+}
+
+.event-summary dt {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.event-summary dd {
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+
+.monster-hunt-tracker-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.kill-entry-panel,
+.spawn-panel {
+  border: 1px solid rgba(205, 188, 150, 0.35);
+  background: rgba(20, 20, 20, 0.26);
+  padding: 12px;
+}
+
+.kill-entry-panel {
+  position: sticky;
+  top: 10px;
+}
+
+.kill-entry-panel h2,
+.spawn-panel h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.kill-entry-panel label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.server-time-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px auto 46px 58px;
+  gap: 6px;
+  align-items: end;
+  margin-bottom: 10px;
+}
+
+.server-time-fields label {
+  margin-bottom: 0;
+}
+
+#huntServerHour,
+#huntServerMinute {
+  text-align: center;
+}
+
+.combo-field {
+  margin-bottom: 12px;
+}
+
+.quick-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+  text-transform: none;
+}
+
+.time-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+}
+
+.time-entry input {
+  text-align: center;
+}
+
+.time-colon {
+  color: var(--accent, #f2d88c);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.entry-time-colon {
+  align-self: end;
+  padding-bottom: 8px;
+}
+
+.table-time-entry {
+  min-width: 104px;
+}
+
+.kill-entry-panel input,
+.kill-entry-panel select,
+.monster-hunt-table input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 34px;
+  padding: 7px 9px;
+  border: 1px solid rgba(205, 188, 150, 0.38);
+  border-radius: 4px;
+  background: rgba(8, 7, 6, 0.78);
+  color: var(--ink, #e8ddbf);
+  font: inherit;
+}
+
+.kill-entry-panel input::placeholder,
+.monster-hunt-table input::placeholder {
+  color: rgba(232, 221, 191, 0.48);
+}
+
+.kill-entry-panel input:focus,
+.kill-entry-panel select:focus,
+.monster-hunt-table input:focus {
+  outline: 2px solid rgba(242, 216, 140, 0.34);
+  border-color: rgba(242, 216, 140, 0.72);
+  background: rgba(17, 17, 17, 0.95);
+}
+
+.kill-entry-panel input[type="date"]::-webkit-calendar-picker-indicator,
+.monster-hunt-table input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(88%) sepia(18%) saturate(689%) hue-rotate(359deg) brightness(98%);
+  opacity: 0.82;
+}
+
+.kill-entry-panel button,
+.tracker-actions button {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid rgba(205, 168, 90, 0.72);
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(85, 64, 31, 0.98), rgba(42, 31, 18, 0.98));
+  color: #fff7df;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quick-suggestions .suggestion-button {
+  width: auto;
+  min-height: 28px;
+  padding: 4px 8px;
+  border-color: rgba(255, 253, 248, 0.16);
+  background: rgba(255, 253, 248, 0.08);
+  color: var(--ink, #e8ddbf);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.quick-suggestions .suggestion-button:hover {
+  border-color: rgba(242, 216, 140, 0.56);
+  background: rgba(242, 216, 140, 0.16);
+}
+
+.time-now-button {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.kill-entry-panel button:hover,
+.tracker-actions button:hover {
+  border-color: rgba(242, 216, 140, 0.9);
+  background: linear-gradient(180deg, rgba(111, 82, 36, 0.98), rgba(54, 39, 20, 0.98));
+}
+
+.clear-tracker {
+  margin-top: 8px;
+}
+
+.spawn-board {
+  display: grid;
+  gap: 14px;
+}
+
+.tracker-storage {
+  min-height: 18px;
+  margin: 10px 0 0;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.empty-tracker {
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px dashed rgba(205, 188, 150, 0.35);
+  background: rgba(20, 20, 20, 0.22);
+}
+
+.tracker-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(205, 188, 150, 0.35);
+}
+
+.monster-hunt-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.upcoming-table {
+  min-width: 720px;
+}
+
+.tracked-table {
+  min-width: 760px;
+}
+
+.monster-hunt-table th,
+.monster-hunt-table td {
+  padding: 8px;
+  vertical-align: top;
+}
+
+.monster-hunt-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(17, 17, 17, 0.98);
+  color: var(--accent, #f2d88c);
+  text-align: left;
+}
+
+.monster-hunt-table .boss-cell {
+  max-width: 260px;
+}
+
+.status-cell small {
+  display: block;
+  margin-top: 4px;
+  opacity: 0.75;
+}
+
+.tracker-status {
+  display: inline-block;
+  min-width: 116px;
+  padding: 3px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  font-weight: 700;
+  text-align: center;
+}
+
+.tracker-status.waiting {
+  border-color: #8aa7d8;
+  color: #c6d9ff;
+}
+
+.tracker-status.open {
+  border-color: #69b56f;
+  color: #bcf4bf;
+}
+
+.tracker-status.overdue {
+  border-color: #d3914f;
+  color: #ffd2a4;
+}
+
+.tracker-actions {
+  min-width: 154px;
+}
+
+.tracker-actions button {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+@media (max-width: 760px) {
+  .monster-hunt-page {
+    padding: 12px;
+  }
+
+  .event-summary,
+  .monster-hunt-tracker-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .kill-entry-panel {
+    position: static;
+  }
+}

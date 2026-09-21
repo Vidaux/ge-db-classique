@@ -5,6 +5,13 @@ $ProjectRoot = dirname(__DIR__);
 $WebOutputDir = $ProjectRoot;
 $WebImageRoot = $WebOutputDir.DIRECTORY_SEPARATOR.'images';
 $GeDataRoot = $ProjectRoot.DIRECTORY_SEPARATOR.'ge';
+$GeneratedWebFiles = array();
+$GeneratedWriteStats = array(
+	'written' => 0,
+	'unchanged' => 0,
+	'removed' => 0,
+	'failed' => 0,
+);
 
 function EnsureDirectory($path) {
 	if (!is_dir($path)) {
@@ -20,6 +27,109 @@ foreach (array('Barrack', 'Items', 'Misc', 'Skills') as $WebImageFolder) {
 function WebOutputPath($relativePath) {
 	global $WebOutputDir;
 	return $WebOutputDir.DIRECTORY_SEPARATOR.str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $relativePath);
+}
+
+function GeneratedManifestPath() {
+	return __DIR__.DIRECTORY_SEPARATOR.'generated-web-files.json';
+}
+
+function GeneratedRelativePath($path) {
+	global $WebOutputDir;
+	$root = rtrim(str_replace('\\', '/', $WebOutputDir), '/');
+	$normalizedPath = str_replace('\\', '/', $path);
+	if ($normalizedPath === $root) {
+		return '';
+	}
+	if (strpos($normalizedPath, $root.'/') !== 0) {
+		return null;
+	}
+	return substr($normalizedPath, strlen($root) + 1);
+}
+
+function GeneratedContentHash($path, $content) {
+	if (preg_match('/\.html?$/i', (string)$path)) {
+		$content = preg_replace('/<div id="lastModified">.*?<\/div>/s', '<div id="lastModified">Last modified: [[normalized]]</div>', $content);
+	}
+	return sha1((string)$content);
+}
+
+function RegisterGeneratedWebFile($path) {
+	global $GeneratedWebFiles;
+	$relativePath = GeneratedRelativePath($path);
+	if ($relativePath !== null && $relativePath !== '') {
+		$GeneratedWebFiles[$relativePath] = true;
+	}
+}
+
+function WriteGeneratedFile($path, $content) {
+	global $GeneratedWriteStats;
+	RegisterGeneratedWebFile($path);
+	EnsureDirectory(dirname($path));
+
+	if (is_file($path)) {
+		$oldContent = file_get_contents($path);
+		if ($oldContent !== false && GeneratedContentHash($path, $oldContent) === GeneratedContentHash($path, $content)) {
+			$GeneratedWriteStats['unchanged']++;
+			return false;
+		}
+	}
+
+	if (file_put_contents($path, $content) === false) {
+		$GeneratedWriteStats['failed']++;
+		return false;
+	}
+	$GeneratedWriteStats['written']++;
+	return true;
+}
+
+function RemoveEmptyGeneratedDirectories($startDirectory) {
+	global $WebOutputDir;
+	$root = rtrim(str_replace('\\', '/', $WebOutputDir), '/');
+	$directory = rtrim($startDirectory, DIRECTORY_SEPARATOR);
+	while (is_dir($directory)) {
+		$normalizedDirectory = str_replace('\\', '/', $directory);
+		if ($normalizedDirectory === $root || strpos($normalizedDirectory, $root.'/') !== 0) {
+			break;
+		}
+		$entries = @scandir($directory);
+		if ($entries === false || count(array_diff($entries, array('.', '..'))) > 0) {
+			break;
+		}
+		if (!@rmdir($directory)) {
+			break;
+		}
+		$directory = dirname($directory);
+	}
+}
+
+function FinalizeGeneratedWebManifest() {
+	global $GeneratedWebFiles, $GeneratedWriteStats;
+	$manifestPath = GeneratedManifestPath();
+	$previous = ReadJsonFile($manifestPath, array('files' => array()));
+	$previousFiles = isset($previous['files']) && is_array($previous['files']) ? $previous['files'] : array();
+	$currentFiles = array_keys($GeneratedWebFiles);
+	sort($currentFiles, SORT_NATURAL);
+	$currentLookup = array_fill_keys($currentFiles, true);
+
+	foreach ($previousFiles as $relativePath) {
+		if (isset($currentLookup[$relativePath])) {
+			continue;
+		}
+		$path = WebOutputPath($relativePath);
+		if (is_file($path) || is_link($path)) {
+			@chmod($path, 0666);
+			if (@unlink($path)) {
+				$GeneratedWriteStats['removed']++;
+				RemoveEmptyGeneratedDirectories(dirname($path));
+			}
+		}
+	}
+
+	WriteJsonFile($manifestPath, array(
+		'schema' => 1,
+		'generatedAt' => date('c'),
+		'files' => $currentFiles,
+	));
 }
 
 function GeDataPath($relativePath) {
@@ -1185,8 +1295,7 @@ function WebImageSrc($folder, $fileName) {
 
 function WriteWebAsset($relativePath, $content) {
 	$assetPath = WebOutputPath($relativePath);
-	EnsureDirectory(dirname($assetPath));
-	file_put_contents($assetPath, $content);
+	WriteGeneratedFile($assetPath, $content);
 }
 
 function ExternalizePageAssets($html) {
@@ -1276,25 +1385,41 @@ function FirstChildDivId($sectionHtml) {
 	return '';
 }
 
-function BuildSiteNavigation($activeKey, $lastModifiedHtml) {
+function RoutePrefix($basePath, $route) {
+	return $basePath.ltrim($route, './');
+}
+
+function RewriteRelativeWebPaths($html, $basePath) {
+	if ($basePath === '' || $basePath === './') {
+		return $html;
+	}
+	return str_replace(
+		array('href="./', "href='./", 'src="./', "src='./", '&#039;./images/', '&quot;./images/', '`./images/', "'./images/", '"./images/'),
+		array('href="'.$basePath, "href='".$basePath, 'src="'.$basePath, "src='".$basePath, '&#039;'.$basePath.'images/', '&quot;'.$basePath.'images/', '`'.$basePath.'images/', "'".$basePath.'images/', '"'.$basePath.'images/'),
+		$html
+	);
+}
+
+function BuildSiteNavigation($activeKey, $lastModifiedHtml, $basePath = './') {
 	$links = array(
-		'home' => array('Home', './index.html'),
-		'changelog' => array('Changelog', './changelog.html'),
-		'characters' => array('Characters', './characters.html'),
-		'achievements' => array('Achievements', './achievements.html'),
-		'maps' => array('Maps', './maps.html'),
-		'monsters' => array('Bosses', './monsters.html'),
-		'weapons' => array('Weapons', './weapons.html'),
-		'armor' => array('Armor', './armor.html'),
-		'accessories' => array('Accessories', './accessories.html'),
-		'medals' => array('Medals', './medals.html'),
-		'enchant-chips' => array('Enchant Chips', './enchant-chips.html'),
+		'home' => array('Home', 'index.html'),
+		'changelog' => array('Changelog', 'changelog.html'),
+		'characters' => array('Characters', 'characters/'),
+		'achievements' => array('Achievements', 'achievements/'),
+		'maps' => array('Maps', 'maps/'),
+		'monsters' => array('Bosses', 'monsters/'),
+		'monster-hunt' => array('Monster Hunt', 'monster-hunt/'),
+		'weapons' => array('Weapons', 'weapons/'),
+		'armor' => array('Armor', 'armor/'),
+		'accessories' => array('Accessories', 'accessories/'),
+		'medals' => array('Medals', 'medals/'),
+		'enchant-chips' => array('Enchant Chips', 'enchant-chips/'),
 	);
 
 	$nav = '<div id="main">';
 	foreach ($links as $key => $link) {
 		$class = $key === $activeKey ? ' class="is-active"' : '';
-		$nav .= '<a'.$class.' href="'.$link[1].'">'.$link[0].'</a>';
+		$nav .= '<a'.$class.' href="'.Html(RoutePrefix($basePath, $link[1])).'">'.$link[0].'</a>';
 	}
 	$nav .= $lastModifiedHtml;
 	$nav .= '</div>';
@@ -1322,6 +1447,9 @@ function BuildSideNavigation($fullHtml, $sidePanelId) {
 
 function BuildBodyAttributes($page) {
 	$attributes = array('data-page' => $page['Key']);
+	if (!empty($page['TypePage'])) {
+		$attributes['data-type-page'] = '1';
+	}
 	if (!empty($page['SidePanel'])) {
 		$attributes['class'] = 'has-side-panel';
 	}
@@ -1342,20 +1470,22 @@ function BuildBodyAttributes($page) {
 function BuildPageHtml($fullHtml, $page, $sectionHtml) {
 	$bodyStart = strpos($fullHtml, '<body>');
 	$headHtml = $bodyStart === false ? '' : substr($fullHtml, 0, $bodyStart);
+	$basePath = $page['BasePath'] ?? './';
 	$lastModifiedHtml = '';
 	if (preg_match('/<div id="lastModified">.*?<\/div>/s', $fullHtml, $match)) {
 		$lastModifiedHtml = $match[0];
 	}
 
-	return $headHtml
+	$pageHtml = $headHtml
 		.'<body'.BuildBodyAttributes($page).'>'
 		.BuildSideNavigation($fullHtml, $page['SidePanel'] ?? '')
-		.BuildSiteNavigation($page['Key'], $lastModifiedHtml)
+		.BuildSiteNavigation($page['Key'], $lastModifiedHtml, $basePath)
 		.'<div id="MainContainer">'
 		.ActivatePageSection($sectionHtml)
 		.'</div>'
 		.'</body>'
 		.'</html>';
+	return RewriteRelativeWebPaths($pageHtml, $basePath);
 }
 
 function BuildHomeSection() {
@@ -1391,15 +1521,15 @@ function WriteWebsitePages($fullHtml) {
 	$pages = array(
 		array('Key' => 'home', 'File' => 'index.html', 'Section' => 'Home'),
 		array('Key' => 'changelog', 'File' => 'changelog.html', 'Section' => 'Changelog'),
-		array('Key' => 'characters', 'File' => 'characters.html', 'Section' => 'Character'),
-		array('Key' => 'achievements', 'File' => 'achievements.html', 'Section' => 'MainAchievments', 'SidePanel' => 'AchievmenttempSide', 'ContentParent' => 'MainAchievments', 'DefaultChild' => 'AchievesGeneral'),
-		array('Key' => 'maps', 'File' => 'maps.html', 'Section' => 'Maps', 'SidePanel' => 'MapstempSide', 'ContentParent' => 'Maps'),
-		array('Key' => 'monsters', 'File' => 'monsters.html', 'Section' => 'Monsters', 'SidePanel' => 'MonsterstempSide'),
-		array('Key' => 'weapons', 'File' => 'weapons.html', 'Section' => 'Weapon', 'SidePanel' => 'WeapontempSide', 'ContentParent' => 'Weapon'),
-		array('Key' => 'armor', 'File' => 'armor.html', 'Section' => 'Armor', 'SidePanel' => 'ArmortempSide', 'ContentParent' => 'Armor'),
-		array('Key' => 'accessories', 'File' => 'accessories.html', 'Section' => 'Accs', 'SidePanel' => 'AccstempSide', 'ContentParent' => 'Accs'),
-		array('Key' => 'medals', 'File' => 'medals.html', 'Section' => 'Medalkis', 'SidePanel' => 'MedalkistempSide', 'ContentParent' => 'Medalkis'),
-		array('Key' => 'enchant-chips', 'File' => 'enchant-chips.html', 'Section' => 'EnchantChips', 'SidePanel' => 'EnchanttempSide', 'ContentParent' => 'EnchantChips', 'DefaultChild' => 'EnchantIndex'),
+		array('Key' => 'characters', 'File' => 'characters.html', 'RouteFile' => 'characters/index.html', 'Section' => 'Character'),
+		array('Key' => 'achievements', 'File' => 'achievements.html', 'RouteFile' => 'achievements/index.html', 'Section' => 'MainAchievments', 'SidePanel' => 'AchievmenttempSide', 'ContentParent' => 'MainAchievments', 'DefaultChild' => 'AchievesGeneral'),
+		array('Key' => 'maps', 'File' => 'maps.html', 'RouteFile' => 'maps/index.html', 'Section' => 'Maps', 'SidePanel' => 'MapstempSide', 'ContentParent' => 'Maps'),
+		array('Key' => 'monsters', 'File' => 'monsters.html', 'RouteFile' => 'monsters/index.html', 'Section' => 'Monsters', 'SidePanel' => 'MonsterstempSide'),
+		array('Key' => 'weapons', 'File' => 'weapons.html', 'RouteFile' => 'weapons/index.html', 'Section' => 'Weapon', 'SidePanel' => 'WeapontempSide', 'ContentParent' => 'Weapon'),
+		array('Key' => 'armor', 'File' => 'armor.html', 'RouteFile' => 'armor/index.html', 'Section' => 'Armor', 'SidePanel' => 'ArmortempSide', 'ContentParent' => 'Armor'),
+		array('Key' => 'accessories', 'File' => 'accessories.html', 'RouteFile' => 'accessories/index.html', 'Section' => 'Accs', 'SidePanel' => 'AccstempSide', 'ContentParent' => 'Accs'),
+		array('Key' => 'medals', 'File' => 'medals.html', 'RouteFile' => 'medals/index.html', 'Section' => 'Medalkis', 'SidePanel' => 'MedalkistempSide', 'ContentParent' => 'Medalkis'),
+		array('Key' => 'enchant-chips', 'File' => 'enchant-chips.html', 'RouteFile' => 'enchant-chips/index.html', 'Section' => 'EnchantChips', 'SidePanel' => 'EnchanttempSide', 'ContentParent' => 'EnchantChips', 'DefaultChild' => 'EnchantIndex'),
 	);
 
 	foreach ($pages as $page) {
@@ -1410,7 +1540,13 @@ function WriteWebsitePages($fullHtml) {
 		if (empty($page['DefaultChild']) && !empty($page['ContentParent'])) {
 			$page['DefaultChild'] = FirstChildDivId($sectionHtml);
 		}
-		file_put_contents(WebOutputPath($page['File']), BuildPageHtml($fullHtml, $page, $sectionHtml));
+		$page['BasePath'] = './';
+		WriteGeneratedFile(WebOutputPath($page['File']), BuildPageHtml($fullHtml, $page, $sectionHtml));
+		if (!empty($page['RouteFile'])) {
+			$routedPage = $page;
+			$routedPage['BasePath'] = '../';
+			WriteGeneratedFile(WebOutputPath($page['RouteFile']), BuildPageHtml($fullHtml, $routedPage, $sectionHtml));
+		}
 	}
 }
 
@@ -1855,6 +1991,35 @@ function EnchantGroupId($category, $chipName, $optionGroup, $itemType) {
 
 function ItemAnchorId($category, $itemId) {
 	return 'Item_'.preg_replace('/[^A-Za-z0-9_-]/', '_', $category.'_'.$itemId);
+}
+
+function SlugifyPathPart($value) {
+	$value = strtolower(html_entity_decode((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
+	$value = preg_replace('/[^a-z0-9]+/', '-', $value);
+	$value = trim($value, '-');
+	return $value === '' ? 'entry' : $value;
+}
+
+function ItemCategoryRouteDirectory($category) {
+	$directories = array(
+		'Weapon' => 'weapons',
+		'Armor' => 'armor',
+		'Accs' => 'accessories',
+		'Medalkis' => 'medals',
+	);
+	return $directories[$category] ?? SlugifyPathPart($category);
+}
+
+function ItemTypeRoute($category, $itemType) {
+	return ItemCategoryRouteDirectory($category).'/'.SlugifyPathPart($itemType).'/';
+}
+
+function ItemTypeAnchorHref($category, $itemType, $itemId) {
+	return './'.ItemTypeRoute($category, $itemType).'#'.ItemAnchorId($category, $itemId);
+}
+
+function CharacterBaseRoute($characterName) {
+	return 'characters/'.SlugifyPathPart($characterName).'/';
 }
 
 function HtmlIdSuffix($value) {
@@ -2777,20 +2942,114 @@ function HasRenderedItemAnchor($category, $itemId) {
 }
 
 function ItemPageLink($category, $itemType, $itemId, $itemName, $requireRenderedAnchor = false) {
-	$pageFiles = array(
-		'Weapon' => 'weapons.html',
-		'Armor' => 'armor.html',
-		'Accs' => 'accessories.html',
-		'Medalkis' => 'medals.html',
-	);
-	$pageFile = $pageFiles[$category] ?? '';
-	if ($pageFile === '' || ($requireRenderedAnchor && !HasRenderedItemAnchor($category, $itemId))) {
+	if ($requireRenderedAnchor && !HasRenderedItemAnchor($category, $itemId)) {
 		return Html($itemName);
 	}
-	$pageHref = './'.$pageFile;
-	$targetHref = $pageHref.'#'.$itemId;
-	$onclick = 'window.location.href='.JsLiteral($targetHref).';return false;';
-	return '<a href="'.$pageHref.'" onclick="'.Html($onclick).'">'.Html($itemName).'</a>';
+	return '<a href="'.Html(ItemTypeAnchorHref($category, $itemType, $itemId)).'">'.Html($itemName).'</a>';
+}
+
+function ItemCategoryPageKey($category) {
+	$keys = array(
+		'Weapon' => 'weapons',
+		'Armor' => 'armor',
+		'Accs' => 'accessories',
+		'Medalkis' => 'medals',
+	);
+	return $keys[$category] ?? 'home';
+}
+
+function ItemCategorySidePanel($category) {
+	$panels = array(
+		'Weapon' => 'WeapontempSide',
+		'Armor' => 'ArmortempSide',
+		'Accs' => 'AccstempSide',
+		'Medalkis' => 'MedalkistempSide',
+	);
+	return $panels[$category] ?? '';
+}
+
+function RegisterItemTypePage($category, $itemType, $panelHtml) {
+	global $ItemTypePages;
+	$key = $category.'#'.$itemType;
+	$ItemTypePages[$key] = array(
+		'Category' => $category,
+		'Key' => ItemCategoryPageKey($category),
+		'Route' => ItemTypeRoute($category, $itemType).'index.html',
+		'ItemType' => $itemType,
+		'PanelHtml' => $panelHtml,
+		'SidePanel' => ItemCategorySidePanel($category),
+	);
+}
+
+function BuildItemTypeSection($detail) {
+	return '<div id="'.$detail['Category'].'">'.$detail['PanelHtml'].'</div>';
+}
+
+function WriteItemTypePages($fullHtml) {
+	global $ItemTypePages;
+	foreach ($ItemTypePages as $detail) {
+		$page = array(
+			'Key' => $detail['Key'],
+			'BasePath' => '../../',
+			'SidePanel' => $detail['SidePanel'],
+			'ContentParent' => $detail['Category'],
+			'DefaultChild' => $detail['Category'].$detail['ItemType'],
+			'TypePage' => true,
+		);
+		WriteGeneratedFile(WebOutputPath($detail['Route']), BuildPageHtml($fullHtml, $page, BuildItemTypeSection($detail)));
+	}
+}
+
+function RegisterCharacterDetailPage($characterName, $className, $actionScript) {
+	global $CharacterDetailPages;
+	$route = CharacterBaseRoute($characterName);
+	if (isset($CharacterDetailPages[$route]) && $CharacterDetailPages[$route]['ClassName'] !== $className) {
+		$route = 'characters/'.SlugifyPathPart($characterName.'-'.$className).'/';
+		$suffix = 2;
+		while (isset($CharacterDetailPages[$route])) {
+			$route = 'characters/'.SlugifyPathPart($characterName.'-'.$className.'-'.$suffix).'/';
+			$suffix++;
+		}
+	}
+
+	$CharacterDetailPages[$route] = array(
+		'Name' => $characterName,
+		'ClassName' => $className,
+		'Action' => $actionScript,
+		'Route' => $route.'index.html',
+	);
+	return $route;
+}
+
+function BuildCharacterDetailSection($fullHtml, $detail) {
+	$detailView = ExtractTopLevelDivById($fullHtml, 'CharacterDetailView');
+	if ($detailView === '') {
+		return '';
+	}
+
+	$detailView = preg_replace('/^<div id="CharacterDetailView"[^>]*>/i', '<div id="CharacterDetailView" class="character-detail-view standalone">', $detailView, 1);
+	$detailView = preg_replace(
+		'/<div class="character-detail-toolbar">.*?<\/div>/s',
+		'<div class="character-detail-toolbar"><a class="character-back-button" href="./characters/">Back to Gallery</a></div>',
+		$detailView,
+		1
+	);
+
+	return '<div id="Character" class="character-page">'.
+		$detailView.
+		'<script>document.addEventListener("DOMContentLoaded",function(){'.$detail['Action'].'});</script>'.
+	'</div>';
+}
+
+function WriteCharacterDetailPages($fullHtml) {
+	global $CharacterDetailPages;
+	foreach ($CharacterDetailPages as $detail) {
+		$page = array(
+			'Key' => 'characters',
+			'BasePath' => '../../',
+		);
+		WriteGeneratedFile(WebOutputPath($detail['Route']), BuildPageHtml($fullHtml, $page, BuildCharacterDetailSection($fullHtml, $detail)));
+	}
 }
 
 function RegisterEnchantGroup($category, $currentItem) {
@@ -2891,6 +3150,8 @@ function BuildEnchantChipPage() {
 
 $AutomatedChangelogEntries = UpdateExtractChangelogHistory();
 $AutomatedChangelogHtml = BuildAutomatedChangelogHtml($AutomatedChangelogEntries);
+$CharacterDetailPages = array();
+$ItemTypePages = array();
 $megaitems = '';
 
 foreach (GeDataGlob("xml/datatable_item_*.xml") as $filename) {
@@ -3077,13 +3338,12 @@ foreach ($StanIDs as $IDS){
 }
 	echo "'');";
 	$CharacterAction = RichColorMarkupToHtml(ob_get_clean());
-	$CharacterCardOnclick = htmlspecialchars($CharacterAction."OpenCharacterDetail('CharacterCardsPanel');", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-	$CharacterBrowseOnclick = htmlspecialchars($CharacterAction."OpenCharacterDetail('CharacterBrowsePanel');", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	$CharacterSearchText = implode(' ', array_merge(array($Characters['Name'][$id], $Characters['ClassName'][$id], $Skill['Name'][$Characters['JobSkill'][$id]]), $CharacterWeaponSearchParts, $CharacterStanceSearchParts));
+	$CharacterRoute = RegisterCharacterDetailPage($Characters['Name'][$id], $Characters['ClassName'][$id], $CharacterAction);
 	$CharacterActiveAttr = $CharacterIsActive ? 'true' : 'false';
 	$CharacterHiddenAttr = $CharacterIsActive ? '' : ' hidden';
-	$CharCards .= '<button type="button" class="character-card" data-class-id="'.Html($id).'" data-class-name="'.Html($Characters['ClassName'][$id]).'" data-active="'.$CharacterActiveAttr.'" data-name="'.Html($Characters['Name'][$id]).'" data-search="'.Html($CharacterSearchText).'" data-main-stat="'.Html($CharacterMainStat['Name']).'" data-main-value="'.Html($CharacterMainStat['Value']).'" data-str="'.Html($CharacterStats['STR']).'" data-agi="'.Html($CharacterStats['AGI']).'" data-dex="'.Html($CharacterStats['DEX']).'" data-hp="'.Html($CharacterStats['HP']).'" data-int="'.Html($CharacterStats['INT']).'" data-sen="'.Html($CharacterStats['SEN']).'" onclick="'.$CharacterCardOnclick.'"'.$CharacterHiddenAttr.'><span class="character-card-image"><img src="'.Html($Port).'" alt="'.Html($Characters['Name'][$id]).'"></span><span class="character-card-name">'.Html($Characters['Name'][$id]).'</span><span class="character-card-stat" style="display:none"></span></button>';
-	echo '<tr data-class-id="'.Html($id).'" data-class-name="'.Html($Characters['ClassName'][$id]).'" data-active="'.$CharacterActiveAttr.'" data-search="'.Html($CharacterSearchText).'" onclick="'.$CharacterBrowseOnclick.'"'.$CharacterHiddenAttr.'><td>'.$Characters['Name'][$id].'</td><td>'.$CharacterMainStat['Display'].'</td><td>'.$Characters['STR'][$id].'</td><td>'.$Characters['AGI'][$id].'</td><td>'.$Characters['DEX'][$id].'</td><td>'.$Characters['CON'][$id].'</td><td>'.$Characters['INT'][$id].'</td><td>'.$Characters['CHA'][$id].'</td><td>';
+	$CharCards .= '<a class="character-card" href="./'.Html($CharacterRoute).'" data-class-id="'.Html($id).'" data-class-name="'.Html($Characters['ClassName'][$id]).'" data-active="'.$CharacterActiveAttr.'" data-name="'.Html($Characters['Name'][$id]).'" data-search="'.Html($CharacterSearchText).'" data-main-stat="'.Html($CharacterMainStat['Name']).'" data-main-value="'.Html($CharacterMainStat['Value']).'" data-str="'.Html($CharacterStats['STR']).'" data-agi="'.Html($CharacterStats['AGI']).'" data-dex="'.Html($CharacterStats['DEX']).'" data-hp="'.Html($CharacterStats['HP']).'" data-int="'.Html($CharacterStats['INT']).'" data-sen="'.Html($CharacterStats['SEN']).'"'.$CharacterHiddenAttr.'><span class="character-card-image"><img src="'.Html($Port).'" alt="'.Html($Characters['Name'][$id]).'"></span><span class="character-card-name">'.Html($Characters['Name'][$id]).'</span><span class="character-card-stat" style="display:none"></span></a>';
+	echo '<tr data-class-id="'.Html($id).'" data-class-name="'.Html($Characters['ClassName'][$id]).'" data-active="'.$CharacterActiveAttr.'" data-search="'.Html($CharacterSearchText).'"'.$CharacterHiddenAttr.'><td><a href="./'.Html($CharacterRoute).'">'.Html($Characters['Name'][$id]).'</a></td><td>'.$CharacterMainStat['Display'].'</td><td>'.$Characters['STR'][$id].'</td><td>'.$Characters['AGI'][$id].'</td><td>'.$Characters['DEX'][$id].'</td><td>'.$Characters['CON'][$id].'</td><td>'.$Characters['INT'][$id].'</td><td>'.$Characters['CHA'][$id].'</td><td>';
 	
 	
 	foreach ($NPCList['ClassID'] as $CurrentNPC){
@@ -3280,14 +3540,15 @@ ob_start();
 $rowClass = 'dark';
 echo ('<table><tbody>');
 for($i=1;$i<8;$i++){
-if($Recipe['Stuff'.$i][$CurrentRecipe]!="0"){	
-$StuffId = 1*$Recipe['Stuff'.$i][$CurrentRecipe];
+$RecipeStuffId = $Recipe['Stuff'.$i][$CurrentRecipe] ?? '0';
+if($RecipeStuffId!="0"){	
+$StuffId = 1*$RecipeStuffId;
 $StuffFile = $Items['FileName'][$StuffId] ?? '';
 $StuffName = ItemDisplayName($StuffId);
 if($StuffFile !== '' && $StuffFile !== 'None')
 {CopyToWebImage(GeDataPath('ui/illust/'.$StuffFile.'.bmp'), 'Items', $StuffFile.'.bmp');};
-if($Recipe['Stuff'.$i][$CurrentRecipe]!="0") {
-	echo('<tr class="'.$rowClass.'"><td>'.ImageTag('Items', $StuffFile, $StuffName, 'class="recipe-icon"').Html($StuffName).' x'.Html($Recipe['Stuff'.$i.'Num'][$CurrentRecipe]).'</td></tr>');
+if($RecipeStuffId!="0") {
+	echo('<tr class="'.$rowClass.'"><td>'.ImageTag('Items', $StuffFile, $StuffName, 'class="recipe-icon"').Html($StuffName).' x'.Html($Recipe['Stuff'.$i.'Num'][$CurrentRecipe] ?? '').'</td></tr>');
 	$rowClass = $rowClass === 'dark' ? 'dark2' : 'dark';
 }
 };};
@@ -3462,17 +3723,19 @@ ${$Category.'List'}='<div id="'.$Category.'">';
 Foreach ($ItemStrings as ${$Category.'Category1'} => $valuearray){
 	
 foreach ($valuearray as $CategoryName2 =>$Endvalue)
-	{${$Category.'CategoryList'}=${$Category.'CategoryList'}.'<li class="WeapListLi"><a href="#" onclick="ToggleContent(`'.$Category.'`, `'.$Category.$CategoryName2.'`);ScrollToContentTop();closeNav();return false;">'.$CategoryName2.'</a></li>';
+	{${$Category.'CategoryList'}=${$Category.'CategoryList'}.'<li class="WeapListLi"><a href="./'.Html(ItemTypeRoute($Category, $CategoryName2)).'">'.Html($CategoryName2).'</a></li>';
 		if (in_array($Category, array('Weapon', 'Armor', 'Accs'), true)) {
 			ksort($Endvalue, SORT_NATURAL);
 			$LevelBlocks = ItemTypeLabel($CategoryName2);
 			foreach ($Endvalue as $LevelBlock) {
 				$LevelBlocks .= ItemLevelBlock($Category, $CategoryName2, $LevelBlock['Label'], $LevelBlock['Items']);
 			}
-			${$Category.'List'}=${$Category.'List'}.'<div id="'.$Category.$CategoryName2.'" class="item-category-panel">'.$LevelBlocks.'</div>';
+			$TypePanelHtml = '<div id="'.$Category.$CategoryName2.'" class="item-category-panel">'.$LevelBlocks.'</div>';
 		} else {
-			${$Category.'List'}=${$Category.'List'}.'<div id="'.$Category.$CategoryName2.'">'.$Endvalue.'</div>';
+			$TypePanelHtml = '<div id="'.$Category.$CategoryName2.'">'.$Endvalue.'</div>';
 		}
+		${$Category.'List'}=${$Category.'List'}.$TypePanelHtml;
+		RegisterItemTypePage($Category, $CategoryName2, $TypePanelHtml);
 	}
 	//ToDo: explore& fix the bug where applying Medal parsing also corrupted <div></div> pairs, messing the category structures.
 	if($Category!='Accs'){
@@ -3553,6 +3816,10 @@ $filecontent=str_replace('{br}','<br>',$filecontent);
 $filecontent=RichColorMarkupToHtml($filecontent);
 $filecontent=ExternalizePageAssets($filecontent);
 WriteWebsitePages($filecontent);
+WriteCharacterDetailPages($filecontent);
+WriteItemTypePages($filecontent);
+FinalizeGeneratedWebManifest();
+echo 'Write summary: '.$GeneratedWriteStats['written'].' written, '.$GeneratedWriteStats['unchanged'].' unchanged, '.$GeneratedWriteStats['removed'].' stale removed, '.$GeneratedWriteStats['failed'].' failed.'."\n";
 echo 'Done!';
 echo "\n"; 
 ?>
